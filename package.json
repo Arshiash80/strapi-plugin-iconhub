@@ -1,6 +1,26 @@
 {
-  "version": "0.0.0",
-  "keywords": [],
+  "version": "1.0.0",
+  "keywords": [
+    "strapi",
+    "strapi-plugin",
+    "strapi-v5",
+    "strapi-custom-field",
+    "icon-picker",
+    "icon-input",
+    "svg-picker",
+    "custom-input",
+    "strapi-design-system",
+    "strapi-admin",
+    "icon-library",
+    "iconify",
+    "iconify-icons",
+    "iconify-integration",
+    "svg-icons",
+    "visual-icon-picker",
+    "icon-selector",
+    "frontend-component",
+    "strapi-icon-picker"
+  ],
   "type": "commonjs",
   "exports": {
     "./package.json": "./package.json",
