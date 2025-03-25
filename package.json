@@ -31,26 +31,31 @@
     "test:ts:back": "run -T tsc -p server/tsconfig.json"
   },
   "dependencies": {
+    "@iconify/react": "^5.2.0",
     "@strapi/design-system": "^2.0.0-rc.18",
     "@strapi/icons": "^2.0.0-rc.18",
-    "react-intl": "^7.1.7"
+    "@tailwindcss/vite": "^4.0.15",
+    "@types/lodash.debounce": "^4.0.9",
+    "lodash.debounce": "^4.0.8",
+    "react-intl": "^7.1.7",
+    "tailwindcss": "^4.0.15"
   },
   "devDependencies": {
-    "@strapi/strapi": "^5.11.3",
     "@strapi/sdk-plugin": "^5.3.2",
+    "@strapi/strapi": "^5.11.3",
+    "@strapi/typescript-utils": "^5.11.3",
+    "@types/react": "^19.0.12",
+    "@types/react-dom": "^19.0.4",
     "prettier": "^3.5.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.30.0",
     "styled-components": "^6.1.16",
-    "@types/react": "^19.0.12",
-    "@types/react-dom": "^19.0.4",
-    "@strapi/typescript-utils": "^5.11.3",
     "typescript": "^5.8.2"
   },
   "peerDependencies": {
-    "@strapi/strapi": "^5.11.3",
     "@strapi/sdk-plugin": "^5.3.2",
+    "@strapi/strapi": "^5.11.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.30.0",
@@ -58,20 +63,20 @@
   },
   "strapi": {
     "kind": "plugin",
-    "name": "strapi-plugin-icon-hub",
+    "name": "strapi-plugin-iconhub",
     "displayName": "IconHub",
     "description": "Icon picker plugin for Strapi with Iconify integration — search, select, and store icons with raw SVG for high-performance rendering."
   },
-  "name": "strapi-plugin-icon-hub",
+  "name": "strapi-plugin-iconhub",
   "description": "Icon picker plugin for Strapi with Iconify integration — search, select, and store icons with raw SVG for high-performance rendering.",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/Arshiash80/strapi-plugin-icon-hub.git"
+    "url": "git+ssh://git@github.com/Arshiash80/strapi-plugin-iconhub.git"
   },
   "bugs": {
-    "url": "https://github.com/Arshiash80/strapi-plugin-icon-hub/issues"
+    "url": "https://github.com/Arshiash80/strapi-plugin-iconhub/issues"
   },
-  "homepage": "https://github.com/Arshiash80/strapi-plugin-icon-hub#readme",
+  "homepage": "https://github.com/Arshiash80/strapi-plugin-iconhub#readme",
   "author": "Arshia Shahidi <arshia.shahidi@gmail.com>"
 }
