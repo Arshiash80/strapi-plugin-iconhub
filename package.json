@@ -87,7 +87,7 @@
     "displayName": "IconHub",
     "description": "Icon picker plugin for Strapi with Iconify integration — search, select, and store icons with raw SVG for high-performance rendering."
   },
-  "name": "strapi-plugin-iconhub",
+  "name": "@arshiash80/strapi-plugin-iconhub",
   "description": "Icon picker plugin for Strapi with Iconify integration — search, select, and store icons with raw SVG for high-performance rendering.",
   "license": "MIT",
   "repository": {
