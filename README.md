@@ -1,4 +1,5 @@
 # Strapi IconHub
+![iconhb-og](https://github.com/user-attachments/assets/4a7f6113-b836-4740-b06f-1e4d45b18fcc)
 
 A powerful and lightweight icon management plugin for Strapi CMS that supports both raw SVG and the Iconify icon library.
 
