@@ -46,13 +46,15 @@ type IconInputProps = {
   error: IntlShape;
   /** Whether or not the input is disabled */
   disabled: boolean;
+  /** The label of the field */
+  label: string;
 };
 
 const IconInput = forwardRef<HTMLButtonElement, IconInputProps>(
-  ({ hint, disabled, name, value, required, ...props }, forwardedRef) => {
+  ({ hint, disabled, name, value, required, label, ...props }, forwardedRef) => {
     const [iconData, setIconData] = useState<IconInputValue | null>(value);
     const [searchedIcons, setSearchedIcons] = useState<string[] | null>(null);
-    const [searchQuery, setSearchQuery] = useState<string | null>(null);
+    const [searchQuery, setSearchQuery] = useState<string>('');
     const [modalOpen, setModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [startIndex, setStartIndex] = useState(0);
@@ -94,8 +96,9 @@ const IconInput = forwardRef<HTMLButtonElement, IconInputProps>(
     };
 
     const handleSearch = useCallback(async (query?: string) => {
-      setSearchQuery(query || '');
-      if (!query) {
+      const searchTerm = query || '';
+      setSearchQuery(searchTerm);
+      if (!searchTerm.trim()) {
         setSearchedIcons(null);
         setStartIndex(0);
         setThereIsMoreIcons(false);
@@ -103,7 +106,7 @@ const IconInput = forwardRef<HTMLButtonElement, IconInputProps>(
       }
 
       setIsLoading(true);
-      const { data, success, error } = await searchIcon(query);
+      const { data, success, error } = await searchIcon(searchTerm);
       setIsLoading(false);
 
       if (!success || !data) {
@@ -142,9 +145,11 @@ const IconInput = forwardRef<HTMLButtonElement, IconInputProps>(
         <Modal.Trigger>
           <Field.Root required={required} error={props.error} hint={hint}>
             <Field.Label htmlFor={name} error={props.error} required={required}>
-              {name}
+              {label || 'Icon'}
             </Field.Label>
             <Field.Input
+              id={name}
+              name={name}
               type="text"
               value={iconData?.iconName || ''}
               startAction={
@@ -162,7 +167,6 @@ const IconInput = forwardRef<HTMLButtonElement, IconInputProps>(
                 />
               }
               required={required}
-              defaultValue={iconData}
               placeholder={props?.placeholder || props?.attribute?.options?.placeholder}
             />
             <Field.Hint />
@@ -210,7 +214,7 @@ const IconInput = forwardRef<HTMLButtonElement, IconInputProps>(
                     }}
                   />
                 }
-                value={searchQuery}
+                value={searchQuery || ''}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   handleSearchChange(e.target.value)
                 }
