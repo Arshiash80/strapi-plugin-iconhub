@@ -1,5 +1,5 @@
 import { Box, Button, Field, Modal, Textarea, TextInput, NumberInput } from '@strapi/design-system';
-import { Cross, Search, Pencil } from '@strapi/icons';
+import { Cross, Search, Pencil, Download } from '@strapi/icons';
 import { IntlShape } from 'react-intl';
 import { Icon, getIcon } from '@iconify/react';
 import IconPickerIcon from './IconPickerIcon';
@@ -69,8 +69,6 @@ const IconInput = forwardRef<HTMLButtonElement, IconInputProps>(
     const storeIconData = options?.storeIconData ?? true;
     const storeIconName = options?.storeIconName ?? true;
 
-    console.log('_______ PROPS: ', props);
-
     // Helper function to validate hex color format
     const isValidHexColor = (color: string): boolean => {
       return /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color);
@@ -127,6 +125,196 @@ const IconInput = forwardRef<HTMLButtonElement, IconInputProps>(
     const handleInfoModalCancel = () => {
       setInfoModalOpen(false);
       setEditableIconData(null);
+    };
+
+    // Add download SVG functionality
+    const handleDownloadSVG = () => {
+      if (!editableIconData) return;
+
+      let svgContent = '';
+      let fileName = 'icon';
+
+      if (editableIconData.iconData) {
+        // Use raw SVG data if available
+        svgContent = editableIconData.iconData;
+        fileName = editableIconData.iconName || 'icon';
+      } else if (editableIconData.iconName) {
+        // Generate SVG from Iconify icon
+        const iconData = getIcon(editableIconData.iconName);
+        if (iconData?.body) {
+          svgContent = iconData.body;
+          fileName = editableIconData.iconName;
+        }
+      }
+
+      if (svgContent) {
+        // Create SVG element with proper attributes
+        const svgElement = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${editableIconData.width || 24} ${editableIconData.height || 24}" width="${editableIconData.width || 24}" height="${editableIconData.height || 24}"${editableIconData.color ? ` style="color: ${editableIconData.color}"` : ''}>${svgContent}</svg>`;
+
+        // Create blob and download
+        const blob = new Blob([svgElement], { type: 'image/svg+xml' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${fileName.replace(/[^a-zA-Z0-9]/g, '_')}.svg`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }
+    };
+
+    // Add download PNG functionality
+    const handleDownloadPNG = async () => {
+      if (!editableIconData) return;
+
+      try {
+        // Create a canvas element
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        // Set canvas size (you can make this configurable)
+        const size = Math.max(editableIconData.width || 24, editableIconData.height || 24) * 4; // 4x for better quality
+        canvas.width = size;
+        canvas.height = size;
+
+        // Create temporary SVG element
+        let svgContent = '';
+        let fileName = 'icon';
+
+        if (editableIconData.iconData) {
+          svgContent = editableIconData.iconData;
+          fileName = editableIconData.iconName || 'icon';
+        } else if (editableIconData.iconName) {
+          const iconData = getIcon(editableIconData.iconName);
+          if (iconData?.body) {
+            svgContent = iconData.body;
+            fileName = editableIconData.iconName;
+          }
+        }
+
+        if (svgContent) {
+          const svgElement = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${editableIconData.width || 24} ${editableIconData.height || 24}" width="${size}" height="${size}"${editableIconData.color ? ` style="color: ${editableIconData.color}"` : ''}>${svgContent}</svg>`;
+
+          // Convert SVG to data URL
+          const svgBlob = new Blob([svgElement], { type: 'image/svg+xml' });
+          const svgUrl = URL.createObjectURL(svgBlob);
+
+          // Create image element
+          const img = new Image();
+          img.onload = () => {
+            // Clear canvas and draw image
+            ctx.clearRect(0, 0, size, size);
+            ctx.drawImage(img, 0, 0, size, size);
+
+            // Convert to PNG and download
+            canvas.toBlob((blob) => {
+              if (blob) {
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `${fileName.replace(/[^a-zA-Z0-9]/g, '_')}.png`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+              }
+            }, 'image/png');
+
+            URL.revokeObjectURL(svgUrl);
+          };
+          img.src = svgUrl;
+        }
+      } catch (error) {
+        console.error('Error generating PNG:', error);
+      }
+    };
+
+    // Add download JPG functionality
+    const handleDownloadJPG = async () => {
+      if (!editableIconData) return;
+
+      try {
+        // Create a canvas element
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        // Set canvas size
+        const size = Math.max(editableIconData.width || 24, editableIconData.height || 24) * 4;
+        canvas.width = size;
+        canvas.height = size;
+
+        // Create temporary SVG element
+        let svgContent = '';
+        let fileName = 'icon';
+
+        if (editableIconData.iconData) {
+          svgContent = editableIconData.iconData;
+          fileName = editableIconData.iconName || 'icon';
+        } else if (editableIconData.iconName) {
+          const iconData = getIcon(editableIconData.iconName);
+          if (iconData?.body) {
+            svgContent = iconData.body;
+            fileName = editableIconData.iconName;
+          }
+        }
+
+        if (svgContent) {
+          const svgElement = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${editableIconData.width || 24} ${editableIconData.height || 24}" width="${size}" height="${size}"${editableIconData.color ? ` style="color: ${editableIconData.color}"` : ''}>${svgContent}</svg>`;
+
+          // Convert SVG to data URL
+          const svgBlob = new Blob([svgElement], { type: 'image/svg+xml' });
+          const svgUrl = URL.createObjectURL(svgBlob);
+
+          // Create image element
+          const img = new Image();
+          img.onload = () => {
+            // Clear canvas and draw image
+            ctx.clearRect(0, 0, size, size);
+            ctx.drawImage(img, 0, 0, size, size);
+
+            // Convert to JPG and download
+            canvas.toBlob(
+              (blob) => {
+                if (blob) {
+                  const url = URL.createObjectURL(blob);
+                  const link = document.createElement('a');
+                  link.href = url;
+                  link.download = `${fileName.replace(/[^a-zA-Z0-9]/g, '_')}.jpg`;
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                  URL.revokeObjectURL(url);
+                }
+              },
+              'image/jpeg',
+              0.9
+            ); // 90% quality
+
+            URL.revokeObjectURL(svgUrl);
+          };
+          img.src = svgUrl;
+        }
+      } catch (error) {
+        console.error('Error generating JPG:', error);
+      }
+    };
+
+    // Generic download handler
+    const handleDownload = (format: 'svg' | 'png' | 'jpg') => {
+      switch (format) {
+        case 'svg':
+          handleDownloadSVG();
+          break;
+        case 'png':
+          handleDownloadPNG();
+          break;
+        case 'jpg':
+          handleDownloadJPG();
+          break;
+      }
     };
 
     const handleLoadMore = async () => {
@@ -603,6 +791,53 @@ const IconInput = forwardRef<HTMLButtonElement, IconInputProps>(
                     >
                       Leave empty to use default icon colors
                     </Typography>
+                  </Field.Root>
+
+                  {/* Download SVG Button */}
+                  <Field.Root name="download">
+                    <Field.Label>Download Icon</Field.Label>
+                    <Box
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '12px',
+                        flexWrap: 'wrap',
+                      }}
+                    >
+                      <Button
+                        variant="secondary"
+                        startIcon={<Download />}
+                        onClick={() => handleDownload('svg')}
+                        disabled={!editableIconData?.iconData && !editableIconData?.iconName}
+                        style={{ minHeight: '40px' }}
+                      >
+                        Download as SVG
+                      </Button>
+                      <Button
+                        variant="tertiary"
+                        startIcon={<Download />}
+                        onClick={() => handleDownload('png')}
+                        disabled={!editableIconData?.iconData && !editableIconData?.iconName}
+                        style={{ minHeight: '40px' }}
+                      >
+                        Download as PNG
+                      </Button>
+                      <Button
+                        variant="tertiary"
+                        startIcon={<Download />}
+                        onClick={() => handleDownload('jpg')}
+                        disabled={!editableIconData?.iconData && !editableIconData?.iconName}
+                        style={{ minHeight: '40px' }}
+                      >
+                        Download as JPG
+                      </Button>
+                      <Typography
+                        variant="pi"
+                        style={{ fontSize: '12px', opacity: 0.7, width: '100%', marginTop: '8px' }}
+                      >
+                        Choose format and download with current color and dimensions
+                      </Typography>
+                    </Box>
                   </Field.Root>
 
                   {storeIconName && (
