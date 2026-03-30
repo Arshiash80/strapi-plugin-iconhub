@@ -1,6 +1,6 @@
 # Strapi IconHub
 
-![iconhb-og](https://github.com/Arshiash80/strapi-plugin-iconhub/raw/main/assets/docs/OG%20Image%20Template%208b.jpg)
+![Strapi IconHub - Icon Picker for Strapi CMS](./assets/docs/OG%20Image%20Template%208b.jpg)
 
 **The most lightweight and customizable icon picker for Strapi CMS** 🚀
 
@@ -15,6 +15,8 @@ Access **200,000+ professional icons** instantly through Iconify's massive libra
 - [Features](#features)
 - [Quick Start](#quick-start)
 - [Configuration](#configuration)
+  - [Icon Set Categories](#icon-set-categories)
+  - [Icon Set Filter Panel](#icon-set-filter-panel)
 - [Usage Examples](#usage-examples)
 - [Frontend Implementation](#frontend-implementation)
 - [API Reference](#api-reference)
@@ -25,6 +27,7 @@ Access **200,000+ professional icons** instantly through Iconify's massive libra
 - 🎨 **Visual Picker**: Intuitive icon selection in Strapi admin
 - 🧩 **Flexible Storage**: Choose between icon name, raw SVG, or both
 - 🎨 **Color Customization**: Built-in color picker and editing tools
+- 🗂️ **Icon Set Filtering**: Restrict available icon sets by category and filter within the picker
 - 🧱 **Universal**: Works with all Strapi content types
 - ⚡ **Performance**: Lightweight and optimized
 
@@ -49,22 +52,22 @@ yarn build && yarn develop
 ### 3. Verify Installation
 
 Navigate to **Settings > Plugins** to confirm IconHub is installed.
-![Plugin Verification](https://res.cloudinary.com/dcmxgdy82/image/upload/v1746724897/image_b5df49f6af.png)
+![Plugin Verification](./assets/docs/plugin-verification.png)
 
 ### 4. Add to Content Type
 
 1. Open **Content-Type Builder** and navigate to or create a new collection.
 
 2. Add custom field → Select **IconHub**
-   ![Custom Field Tab](https://github.com/Arshiash80/strapi-plugin-iconhub/raw/main/assets/docs/custom-field-tab.png)
+   ![Custom Field Tab](./assets/docs/custom-field-tab.png)
 
-  ![Custom Field Selection](https://github.com/Arshiash80/strapi-plugin-iconhub/raw/main/assets/docs/iconhub-custom-field-selection.png)
+  ![Custom Field Selection](./assets/docs/iconhub-custom-field-selection.png)
 
 3. Configure storage preferences
 
 ## ⚙️ Configuration
 
-![Configure Storage Preferences](https://github.com/Arshiash80/strapi-plugin-iconhub/raw/main/assets/docs/configure-storage-preferences.png)
+![Configure Storage Preferences](./assets/docs/configure-storage-preferences.png)
 
 IconHub offers flexible storage options to optimize for your use case:
 
@@ -76,16 +79,44 @@ IconHub offers flexible storage options to optimize for your use case:
 
 **Note**: At least one option must be selected.
 
+### Icon Set Categories
+
+In the **Basic Settings** tab of the Content-Type Builder, you can control which icon set categories are available for the field. Categories are fetched automatically from the Iconify API and include groups like:
+
+- **Material** — Material Design Icons, Material Symbols, etc.
+- **UI 24px** — Lucide, Tabler, Remix Icon, Iconoir, etc.
+- **Logos** — Simple Icons, Skill Icons, brand logos
+- **Emoji** — Noto, Twemoji, Fluent Emoji, etc.
+- And more (~12 categories covering 200K+ icons)
+
+All categories are **enabled by default**. Uncheck any category to hide those icon sets from editors using this field. This lets you, for example, restrict a field to only Material Design icons or only emoji.
+
+![Configure Available Icon Set Categories](./assets/docs/configure-available-icon-set-categories.png)
+
+### Icon Set Filter Panel
+
+When selecting icons in the content editor, the icon picker modal includes a **filter panel** that lets editors narrow down which icon sets are shown:
+
+- 🔍 **Search** icon sets by name
+- ☑️ **Check/uncheck** individual sets or entire categories
+- 📊 **Select All / Deselect All** buttons for quick toggling
+- The filter panel only shows icon sets from the categories the admin enabled in the Content-Type Builder
+
+Click the **Filter** button in the icon picker toolbar to toggle the filter panel open or closed.
+
+![Icon Picker Filter Sidebar](./assets/docs/icon-picker-search-filter-sidebar-1.png)
+![Icon Picker Filter with Search](./assets/docs/icon-picker-search-filter-sidebar-2.png)
+
 ## Usage Examples
 
 ### Basic Icon Selection
 
 The icon picker appears in your content entries with search functionality:
 
-![alt text](https://github.com/Arshiash80/strapi-plugin-iconhub/raw/main/assets/docs/icon-custom-field-input.png)
-![alt text](https://github.com/Arshiash80/strapi-plugin-iconhub/raw/main/assets/docs/icon-picker-search-1.png)
-![alt text](https://github.com/Arshiash80/strapi-plugin-iconhub/raw/main/assets/docs/icon-picker-search-2.png)
-![alt text](https://github.com/Arshiash80/strapi-plugin-iconhub/raw/main/assets/docs/icon-picker-search-3.png)
+![Icon Field Input](./assets/docs/icon-custom-field-input.png)
+![Icon Picker Search](./assets/docs/icon-picker-search-1.png)
+![Icon Picker Search Results](./assets/docs/icon-picker-search-2.png)
+![Icon Picker Advanced Search](./assets/docs/icon-picker-search-3.png)
 
 ### Icon Editing & Customization
 
@@ -93,10 +124,10 @@ The icon picker appears in your content entries with search functionality:
 - **Live Preview**: See changes in real-time
 - **Advanced Editing**: Modify icon names and SVG data (with safety controls)
 
-![alt text](https://github.com/Arshiash80/strapi-plugin-iconhub/raw/main/assets/docs/icon-custom-field-input-edit-button.png)
-![alt text](https://github.com/Arshiash80/strapi-plugin-iconhub/raw/main/assets/docs/icon-picker-edit-modal.png)
-![alt text](https://github.com/Arshiash80/strapi-plugin-iconhub/raw/main/assets/docs/icon-picker-edit-modal-color-picker.png)
-![alt text](https://github.com/Arshiash80/strapi-plugin-iconhub/raw/main/assets/docs/icon-custom-field-input-with-selected-icon-and-color.png)
+![Edit Button](./assets/docs/icon-custom-field-input-edit-button.png)
+![Edit Modal](./assets/docs/icon-picker-edit-modal.png)
+![Color Picker](./assets/docs/icon-picker-edit-modal-color-picker.png)
+![Selected Icon with Color](./assets/docs/icon-custom-field-input-with-selected-icon-and-color.png)
 
 ### Data Structure
 
@@ -182,6 +213,7 @@ export default function IconDisplay({ tags }: { tags: Tag[] }) {
 - `storeIconName` (boolean): Enable icon name storage
 - `storeIconData` (boolean): Enable raw SVG storage
 - `required` (boolean): Make field mandatory
+- `category_*` (boolean): Enable/disable icon set categories (e.g., `category_Material`, `category_Logos`). All enabled by default.
 
 ### Field Properties
 
