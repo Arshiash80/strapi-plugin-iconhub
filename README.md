@@ -1,6 +1,6 @@
 # Strapi IconHub
 
-![Strapi IconHub - Icon Picker for Strapi CMS](./assets/docs/OG%20Image%20Template%208b.jpg)
+![Strapi IconHub - Icon Picker for Strapi CMS](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/OG%20Image%20Template%208b.jpg)
 
 **The most lightweight and customizable icon picker for Strapi CMS** 🚀
 
@@ -52,22 +52,22 @@ yarn build && yarn develop
 ### 3. Verify Installation
 
 Navigate to **Settings > Plugins** to confirm IconHub is installed.
-![Plugin Verification](./assets/docs/plugin-verification.png)
+![Plugin Verification](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/plugin-verification.png)
 
 ### 4. Add to Content Type
 
 1. Open **Content-Type Builder** and navigate to or create a new collection.
 
 2. Add custom field → Select **IconHub**
-   ![Custom Field Tab](./assets/docs/custom-field-tab.png)
+   ![Custom Field Tab](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/custom-field-tab.png)
 
-  ![Custom Field Selection](./assets/docs/iconhub-custom-field-selection.png)
+  ![Custom Field Selection](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/iconhub-custom-field-selection.png)
 
 3. Configure storage preferences
 
 ## ⚙️ Configuration
 
-![Configure Storage Preferences](./assets/docs/configure-storage-preferences.png)
+![Configure Storage Preferences](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/configure-storage-preferences.png)
 
 IconHub offers flexible storage options to optimize for your use case:
 
@@ -91,7 +91,7 @@ In the **Basic Settings** tab of the Content-Type Builder, you can control which
 
 All categories are **enabled by default**. Uncheck any category to hide those icon sets from editors using this field. This lets you, for example, restrict a field to only Material Design icons or only emoji.
 
-![Configure Available Icon Set Categories](./assets/docs/configure-available-icon-set-categories.png)
+![Configure Available Icon Set Categories](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/configure-available-icon-set-categories.png)
 
 ### Icon Set Filter Panel
 
@@ -104,8 +104,8 @@ When selecting icons in the content editor, the icon picker modal includes a **f
 
 Click the **Filter** button in the icon picker toolbar to toggle the filter panel open or closed.
 
-![Icon Picker Filter Sidebar](./assets/docs/icon-picker-search-filter-sidebar-1.png)
-![Icon Picker Filter with Search](./assets/docs/icon-picker-search-filter-sidebar-2.png)
+![Icon Picker Filter Sidebar](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/icon-picker-search-filter-sidebar-1.png)
+![Icon Picker Filter with Search](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/icon-picker-search-filter-sidebar-2.png)
 
 ## Usage Examples
 
@@ -113,10 +113,10 @@ Click the **Filter** button in the icon picker toolbar to toggle the filter pane
 
 The icon picker appears in your content entries with search functionality:
 
-![Icon Field Input](./assets/docs/icon-custom-field-input.png)
-![Icon Picker Search](./assets/docs/icon-picker-search-1.png)
-![Icon Picker Search Results](./assets/docs/icon-picker-search-2.png)
-![Icon Picker Advanced Search](./assets/docs/icon-picker-search-3.png)
+![Icon Field Input](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/icon-custom-field-input.png)
+![Icon Picker Search](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/icon-picker-search-1.png)
+![Icon Picker Search Results](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/icon-picker-search-2.png)
+![Icon Picker Advanced Search](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/icon-picker-search-3.png)
 
 ### Icon Editing & Customization
 
@@ -124,10 +124,10 @@ The icon picker appears in your content entries with search functionality:
 - **Live Preview**: See changes in real-time
 - **Advanced Editing**: Modify icon names and SVG data (with safety controls)
 
-![Edit Button](./assets/docs/icon-custom-field-input-edit-button.png)
-![Edit Modal](./assets/docs/icon-picker-edit-modal.png)
-![Color Picker](./assets/docs/icon-picker-edit-modal-color-picker.png)
-![Selected Icon with Color](./assets/docs/icon-custom-field-input-with-selected-icon-and-color.png)
+![Edit Button](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/icon-custom-field-input-edit-button.png)
+![Edit Modal](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/icon-picker-edit-modal.png)
+![Color Picker](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/icon-picker-edit-modal-color-picker.png)
+![Selected Icon with Color](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/icon-custom-field-input-with-selected-icon-and-color.png)
 
 ### Data Structure
 
