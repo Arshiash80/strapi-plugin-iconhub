@@ -32,7 +32,7 @@ export const searchIcon = async (
   query: string,
   start: number = 0,
   limit: number = 50,
-  prefixes?: string | string[]
+  prefixes?: string[]
 ): Promise<SearchIconResponse> => {
   const endpoint = `${API_URL}/search`;
   const params: Record<string, any> = {
@@ -41,8 +41,8 @@ export const searchIcon = async (
     limit,
     start,
   };
-  if (prefixes && (Array.isArray(prefixes) ? prefixes.length > 0 : String(prefixes).trim().length > 0)) {
-    params.prefixes = Array.isArray(prefixes) ? prefixes.join(',') : prefixes;
+  if (prefixes && prefixes.length > 0) {
+    params.prefixes = prefixes.join(',');
   }
   try {
     const response = await axios.get(endpoint, { params });

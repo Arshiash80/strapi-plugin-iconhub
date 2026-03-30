@@ -3,22 +3,41 @@ import { PLUGIN_ID } from './pluginId';
 import { Initializer } from './components/Initializer';
 import IconPickerIcon from './components/IconPickerIcon';
 import * as yup from 'yup';
+import { groupByCategory, sortCategories, slugifyCategory } from './libs/iconSetUtils';
+import type { IconSetCollections } from './libs/iconSetUtils';
+
+// Start fetching Iconify collections at module load time so it's ready when register() runs
+const collectionsPromise: Promise<IconSetCollections> = fetch(
+  'https://api.iconify.design/collections'
+)
+  .then((r) => r.json())
+  .catch(() => ({}));
 
 export default {
-  register(app: any) {
-    // app.addMenuLink({
-    //   to: `plugins/${PLUGIN_ID}`,
-    //   icon: PluginIcon,
-    //   intlLabel: {
-    //     id: `${PLUGIN_ID}.plugin.name`,
-    //     defaultMessage: PLUGIN_ID,
-    //   },
-    //   Component: async () => {
-    //     const { App } = await import('./pages/App');
+  async register(app: any) {
+    const rawCollections = await collectionsPromise;
 
-    //     return App;
-    //   },
-    // });
+    // Build one checkbox per icon set category (e.g. Material, Logos, Emoji)
+    const grouped = groupByCategory(rawCollections);
+    const sortedCategories = sortCategories(Object.keys(grouped));
+
+    const categoryItems = sortedCategories.map((category) => {
+      const sets = grouped[category];
+      const setCount = Object.keys(sets).length;
+      const totalIcons = Object.values(sets).reduce(
+        (sum, info) => sum + ((info as any).total ?? 0),
+        0
+      );
+      return {
+        name: `options.category_${slugifyCategory(category)}`,
+        type: 'checkbox',
+        defaultValue: true,
+        intlLabel: {
+          id: `iconhub.category.${slugifyCategory(category)}`,
+          defaultMessage: `${category} (${setCount} sets, ${totalIcons.toLocaleString()} icons)`,
+        },
+      };
+    });
 
     app.customFields.register({
       name: 'iconhub',
@@ -42,7 +61,15 @@ export default {
       },
 
       options: {
-        base: [],
+        base: [
+          {
+            sectionTitle: {
+              id: 'iconhub.categories',
+              defaultMessage: 'Available Icon Set Categories',
+            },
+            items: categoryItems,
+          },
+        ],
 
         advanced: [
           {
@@ -59,7 +86,8 @@ export default {
                 },
                 description: {
                   id: 'options.advanced.requiredField.description',
-                  defaultMessage: "You won't be able to create an entry if this field is empty",
+                  defaultMessage:
+                    "You won't be able to create an entry if this field is empty",
                 },
               },
             ],
@@ -103,24 +131,6 @@ export default {
                 },
                 value: true,
                 defaultValue: true,
-              },
-              {
-                size: 12,
-                name: 'options.allowedIconSets',
-                type: 'text',
-                intlLabel: {
-                  id: 'iconhub.settings.allowedIconSets.label',
-                  defaultMessage: 'Limit to Iconify sets (prefixes)',
-                },
-                description: {
-                  id: 'iconhub.settings.allowedIconSets.description',
-                  defaultMessage:
-                    'Comma separated list of icon set prefixes. You can use partial prefixes that end with -, such as mdi- matches mdi-light.',
-                },
-                placeholder: {
-                  id: 'iconhub.settings.allowedIconSets.placeholder',
-                  defaultMessage: 'Leave empty for all iconsets',
-                },
               },
             ],
           },

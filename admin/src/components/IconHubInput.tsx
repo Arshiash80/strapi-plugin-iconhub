@@ -1,5 +1,5 @@
 import { Box, Button, Field, Modal, Textarea, TextInput, NumberInput } from '@strapi/design-system';
-import { Cross, Search, Pencil, Download } from '@strapi/icons';
+import { Cross, Search, Pencil, Download, Filter } from '@strapi/icons';
 import { IntlShape } from 'react-intl';
 import { Icon, getIcon } from '@iconify/react';
 import IconPickerIcon from './IconPickerIcon';
@@ -7,7 +7,10 @@ import { searchIcon } from '../libs/iconifyApi';
 import debounce from 'lodash/debounce';
 import { Typography } from '@strapi/design-system';
 import IconGrid from './IconGrid';
-import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react';
+import IconSetFilterPanel from './IconSetFilterPanel';
+import { useIconCollections } from '../hooks/useIconCollections';
+import { groupByCategory, slugifyCategory, filterByAllowedPrefixes } from '../libs/iconSetUtils';
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 type IconInputValue = {
   iconName: string | null;
@@ -68,16 +71,56 @@ const IconInput = forwardRef<HTMLButtonElement, IconInputProps>(
     // For backward compatibility
     const storeIconData = options?.storeIconData ?? true;
     const storeIconName = options?.storeIconName ?? true;
-    // Optional: limit Iconify search to specific sets (prefixes)
-    const allowedIconSetsRaw: string | undefined = options?.allowedIconSets;
+    // Icon set filter state
+    const [filterPanelOpen, setFilterPanelOpen] = useState(false);
+    const [selectedPrefixes, setSelectedPrefixes] = useState<Set<string>>(new Set());
+    const [prefixesInitialized, setPrefixesInitialized] = useState(false);
+
+    // Fetch all collections (cached), then derive allowed prefixes from CTB category checkboxes
+    const { collections: allCollections, isLoading: collectionsLoading } = useIconCollections();
+
     const allowedPrefixes = useMemo(() => {
-      if (!allowedIconSetsRaw || typeof allowedIconSetsRaw !== 'string') return undefined;
-      const parts = allowedIconSetsRaw
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean);
-      return parts.length ? parts : undefined;
-    }, [allowedIconSetsRaw]);
+      if (!options || !allCollections) return undefined;
+
+      const categoryKeys = Object.keys(options).filter((k) => k.startsWith('category_'));
+      if (categoryKeys.length === 0) return undefined; // no categories configured = allow all
+
+      const grouped = groupByCategory(allCollections);
+      const enabledPrefixes: string[] = [];
+
+      for (const [category, sets] of Object.entries(grouped)) {
+        const slug = slugifyCategory(category);
+        if (options[`category_${slug}`] === true) {
+          enabledPrefixes.push(...Object.keys(sets));
+        }
+      }
+
+      return enabledPrefixes.length > 0 ? enabledPrefixes : undefined;
+    }, [options, allCollections]);
+
+    // Filter collections by allowed prefixes for the filter panel
+    const collections = useMemo(() => {
+      if (!allCollections) return null;
+      return filterByAllowedPrefixes(allCollections, allowedPrefixes);
+    }, [allCollections, allowedPrefixes]);
+
+    // Initialize selectedPrefixes to all collections when data first loads
+    useEffect(() => {
+      if (collections && !prefixesInitialized) {
+        setSelectedPrefixes(new Set(Object.keys(collections)));
+        setPrefixesInitialized(true);
+      }
+    }, [collections, prefixesInitialized]);
+
+    // Compute active prefixes: use filter panel selection if initialized, else fall back to CTB config
+    const activePrefixes = useMemo(() => {
+      if (!prefixesInitialized) return allowedPrefixes;
+      if (selectedPrefixes.size === 0) return ['__none__']; // no sets selected = no results
+      return Array.from(selectedPrefixes);
+    }, [prefixesInitialized, selectedPrefixes, allowedPrefixes]);
+
+    // Track previous activePrefixes to detect changes
+    const prevActivePrefixesRef = useRef(activePrefixes);
 
     // Helper function to validate hex color format
     const isValidHexColor = (color: string): boolean => {
@@ -333,7 +376,7 @@ const IconInput = forwardRef<HTMLButtonElement, IconInputProps>(
         searchQuery,
         startIndex,
         startIndex + 50,
-        allowedPrefixes
+        activePrefixes
       );
       if (!success || !data) {
         // TODO: Handle error
@@ -356,7 +399,7 @@ const IconInput = forwardRef<HTMLButtonElement, IconInputProps>(
         }
 
         setIsLoading(true);
-        const { data, success, error } = await searchIcon(searchTerm, 0, 50, allowedPrefixes);
+        const { data, success, error } = await searchIcon(searchTerm, 0, 50, activePrefixes);
         setIsLoading(false);
 
         if (!success || !data) {
@@ -368,7 +411,7 @@ const IconInput = forwardRef<HTMLButtonElement, IconInputProps>(
         setStartIndex(data.start + data.total);
         setThereIsMoreIcons(data.total === data.limit);
       },
-      [allowedPrefixes]
+      [activePrefixes]
     );
 
     const debouncedSearch = useMemo(
@@ -405,6 +448,14 @@ const IconInput = forwardRef<HTMLButtonElement, IconInputProps>(
         // Removed props.onChange call that was causing infinite loop
       }
     }, [value]);
+
+    // Re-trigger search when filter selection changes (if there's an active query)
+    useEffect(() => {
+      if (prevActivePrefixesRef.current !== activePrefixes && searchQuery.trim()) {
+        handleSearch(searchQuery);
+      }
+      prevActivePrefixesRef.current = activePrefixes;
+    }, [activePrefixes, searchQuery, handleSearch]);
 
     return (
       <>
@@ -508,111 +559,153 @@ const IconInput = forwardRef<HTMLButtonElement, IconInputProps>(
                 <Modal.Body
                   style={{
                     height: 'calc(100vh - 100px)',
+                    padding: 0,
+                    overflow: 'hidden',
                   }}
                 >
-                  <Field.Root name="name">
-                    <Field.Label>Search for an icon from Iconify</Field.Label>
-
-                    <Field.Input
-                      placeholder="What icon are you looking for?"
-                      startAction={
-                        isLoading ? (
-                          <Icon icon={'line-md:loading-loop'} width={16} height={16} />
-                        ) : (
-                          <Search />
-                        )
-                      }
-                      endAction={
-                        <Cross
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            handleSearchChange('');
-                          }}
-                        />
-                      }
-                      value={searchQuery || ''}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        handleSearchChange(e.target.value)
-                      }
-                    />
-                  </Field.Root>
-                  <div
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      paddingTop: '30px',
-                    }}
-                  >
-                    {searchedIcons && searchedIcons?.length > 0 && (
-                      <IconGrid
-                        icons={searchedIcons}
-                        onClick={handleIconChange}
-                        defaultSelectdIcon={iconData?.iconName ?? undefined}
+                  <div style={{ display: 'flex', height: '100%' }}>
+                    {/* Filter panel (collapsible) */}
+                    {filterPanelOpen && collections && (
+                      <IconSetFilterPanel
+                        collections={collections}
+                        selectedPrefixes={selectedPrefixes}
+                        onSelectionChange={setSelectedPrefixes}
+                        isLoading={collectionsLoading}
                       />
                     )}
 
-                    {searchedIcons?.length === 0 && (
-                      <Box
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          height: '100%',
-                        }}
-                      >
-                        <Icon icon={'mdi:ghost'} width={30} height={30} />
-                        <Typography
+                    {/* Main search area */}
+                    <div style={{ flex: 1, padding: '24px', overflowY: 'auto' }}>
+                      <Box style={{ display: 'flex', gap: '8px', alignItems: 'flex-end', marginBottom: '8px' }}>
+                        <Field.Root name="name" style={{ flex: 1 }}>
+                          <Field.Label>Search for an icon from Iconify</Field.Label>
+                          <Field.Input
+                            placeholder="What icon are you looking for?"
+                            startAction={
+                              isLoading ? (
+                                <Icon icon={'line-md:loading-loop'} width={16} height={16} />
+                              ) : (
+                                <Search />
+                              )
+                            }
+                            endAction={
+                              <Cross
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  handleSearchChange('');
+                                }}
+                              />
+                            }
+                            value={searchQuery || ''}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                              handleSearchChange(e.target.value)
+                            }
+                          />
+                        </Field.Root>
+                        <Button
+                          variant={filterPanelOpen ? 'secondary' : 'tertiary'}
+                          onClick={() => setFilterPanelOpen(!filterPanelOpen)}
                           style={{
-                            marginTop: '20px',
-                            fontSize: '1.5rem',
-                            fontWeight: 600,
-                            textAlign: 'center',
+                            height: '40px',
+                            width: '40px',
+                            padding: 0,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexShrink: 0,
                           }}
+                          title="Filter icon sets"
                         >
-                          No icons found
-                        </Typography>
+                          <Filter width={16} height={16} />
+                        </Button>
                       </Box>
-                    )}
 
-                    {!searchedIcons && (
-                      <Box
+                      {/* Filter indicator */}
+                      {collections && prefixesInitialized && selectedPrefixes.size < Object.keys(collections).length && (
+                        <Typography variant="pi" style={{ fontSize: '12px', opacity: 0.7, marginBottom: '8px', display: 'block' }}>
+                          Filtering {selectedPrefixes.size} of {Object.keys(collections).length} icon sets
+                        </Typography>
+                      )}
+
+                      <div
                         style={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          height: '100%',
+                          width: '100%',
+                          height: 'calc(100% - 80px)',
+                          paddingTop: '16px',
                         }}
                       >
-                        <Icon icon={'mdi:ghost'} width={30} height={30} />
-                        <Typography
-                          style={{
-                            marginTop: '20px',
-                            fontSize: '1.5rem',
-                            fontWeight: 600,
-                            textAlign: 'center',
-                          }}
-                        >
-                          Search for an icon
-                        </Typography>
-                      </Box>
-                    )}
+                        {searchedIcons && searchedIcons?.length > 0 && (
+                          <IconGrid
+                            icons={searchedIcons}
+                            onClick={handleIconChange}
+                            defaultSelectdIcon={iconData?.iconName ?? undefined}
+                          />
+                        )}
 
-                    {thereIsMoreIcons && (
-                      <Button
-                        onClick={handleLoadMore}
-                        startIcon
-                        loading={isLoading}
-                        style={{
-                          margin: '20px auto',
-                          display: 'flex',
-                        }}
-                      >
-                        Load more
-                      </Button>
-                    )}
+                        {searchedIcons?.length === 0 && (
+                          <Box
+                            style={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              height: '100%',
+                            }}
+                          >
+                            <Icon icon={'mdi:ghost'} width={30} height={30} />
+                            <Typography
+                              style={{
+                                marginTop: '20px',
+                                fontSize: '1.5rem',
+                                fontWeight: 600,
+                                textAlign: 'center',
+                              }}
+                            >
+                              No icons found
+                            </Typography>
+                          </Box>
+                        )}
+
+                        {!searchedIcons && (
+                          <Box
+                            style={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              height: '100%',
+                            }}
+                          >
+                            <Icon icon={'mdi:ghost'} width={30} height={30} />
+                            <Typography
+                              style={{
+                                marginTop: '20px',
+                                fontSize: '1.5rem',
+                                fontWeight: 600,
+                                textAlign: 'center',
+                              }}
+                            >
+                              Search for an icon
+                            </Typography>
+                          </Box>
+                        )}
+
+                        {thereIsMoreIcons && (
+                          <Button
+                            onClick={handleLoadMore}
+                            startIcon
+                            loading={isLoading}
+                            style={{
+                              margin: '20px auto',
+                              display: 'flex',
+                            }}
+                          >
+                            Load more
+                          </Button>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </Modal.Body>
                 <Modal.Footer>
