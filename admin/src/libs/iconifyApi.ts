@@ -1,4 +1,5 @@
-import type { IconifyInfo } from '@iconify/types';
+import { addCollection } from '@iconify/react';
+import type { IconifyInfo, IconifyJSON } from '@iconify/types';
 export type IconifyIconSetList = Record<string, IconifyInfo>;
 
 import axios from 'axios';
@@ -34,6 +35,8 @@ export type IconifySearchOptions = {
 
 const collectionCache = new Map<string, NonNullable<CollectionResponse['data']>>();
 const collectionIconNamesRequests = new Map<string, Promise<CollectionResponse>>();
+const iconDataCache = new Map<string, Set<string>>();
+const iconDataRequests = new Map<string, Promise<void>>();
 
 type SearchIconResponse = IconifyAPIResponse<{
   /** List of icons, including prefixes */
@@ -191,3 +194,66 @@ export const getIconsInCollection = async (prefix: string): Promise<CollectionRe
     }
   }
 }
+
+const ICON_DATA_BATCH_SIZE = 80;
+
+const chunkIcons = (icons: string[], chunkSize: number) => {
+  const chunks: string[][] = [];
+  for (let index = 0; index < icons.length; index += chunkSize) {
+    chunks.push(icons.slice(index, index + chunkSize));
+  }
+  return chunks;
+};
+
+export const preloadCollectionIcons = async (prefix: string, icons: string[]): Promise<void> => {
+  const normalizedIcons = Array.from(
+    new Set(
+      icons
+        .map((icon) => icon.trim())
+        .filter(Boolean)
+    )
+  );
+
+  if (normalizedIcons.length === 0) {
+    return;
+  }
+
+  const cachedIcons = iconDataCache.get(prefix) ?? new Set<string>();
+  iconDataCache.set(prefix, cachedIcons);
+
+  const missingIcons = normalizedIcons.filter((icon) => !cachedIcons.has(icon));
+  if (missingIcons.length === 0) {
+    return;
+  }
+
+  const batches = chunkIcons(missingIcons, ICON_DATA_BATCH_SIZE);
+
+  await Promise.all(
+    batches.map((batch) => {
+      const requestKey = `${prefix}:${batch.join(',')}`;
+      const existingRequest = iconDataRequests.get(requestKey);
+      if (existingRequest) {
+        return existingRequest;
+      }
+
+      const request = axios
+        .get<IconifyJSON>(`${API_URL}/${prefix}.json`, {
+          params: {
+            icons: batch.join(','),
+          },
+        })
+        .then((response) => {
+          addCollection(response.data);
+          batch.forEach((icon) => {
+            cachedIcons.add(icon);
+          });
+        })
+        .finally(() => {
+          iconDataRequests.delete(requestKey);
+        });
+
+      iconDataRequests.set(requestKey, request);
+      return request;
+    })
+  );
+};

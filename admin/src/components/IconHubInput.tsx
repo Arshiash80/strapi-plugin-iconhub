@@ -8,7 +8,7 @@ import { useTheme } from 'styled-components';
 import IconGrid from './IconGrid';
 import IconPickerIcon from './IconPickerIcon';
 import IconSetCard from './IconSetCard';
-import { getIconsInCollection, searchIcon, type IconifySearchOptions } from '../libs/iconifyApi';
+import { getIconsInCollection, preloadCollectionIcons, searchIcon, type IconifySearchOptions } from '../libs/iconifyApi';
 import { useIconCollections } from '../hooks/useIconCollections';
 import { filterByAllowedPrefixes, groupByCategory, slugifyCategory, sortCategories } from '../libs/iconSetUtils';
 
@@ -116,6 +116,23 @@ const getChipStyle = (theme: ThemeShape, active: boolean): CSSProperties => ({
   whiteSpace: 'nowrap',
   flexShrink: 0,
   fontWeight: active ? 700 : 500,
+});
+
+const getInfoPillStyle = (theme: ThemeShape): CSSProperties => ({
+  height: '34px',
+  borderRadius: '999px',
+  padding: '0 14px',
+  border: `1px solid ${theme.colors.neutral200}`,
+  background: theme.colors.neutral100,
+  color: theme.colors.neutral700,
+  fontSize: '12px',
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  whiteSpace: 'nowrap',
+  flexShrink: 0,
+  cursor: 'default',
+  fontWeight: 600,
 });
 
 const getDropdownPanelStyle = (theme: ThemeShape): CSSProperties => ({
@@ -237,13 +254,13 @@ const IconInput = forwardRef<HTMLButtonElement, IconInputProps>(
     const [setCategoryFilter, setSetCategoryFilter] = useState<string>('all');
     const [setVisibleCount, setSetVisibleCount] = useState(ICON_PAGE_SIZE);
     const [isSetLoading, setIsSetLoading] = useState(false);
+    const [hydratedSetIcons, setHydratedSetIcons] = useState<Set<string>>(new Set());
+    const [isSetPageHydrating, setIsSetPageHydrating] = useState(false);
 
     const [viewportWidth, setViewportWidth] = useState<number>(() =>
       typeof window === 'undefined' ? 1280 : window.innerWidth
     );
 
-    const scrollAreaRef = useRef<HTMLDivElement | null>(null);
-    const sentinelRef = useRef<HTMLDivElement | null>(null);
     const globalSearchLoadLockRef = useRef(false);
 
     const inputSurfaceStyle = useMemo(() => getInputSurfaceStyle(theme), [theme]);
@@ -544,49 +561,54 @@ const IconInput = forwardRef<HTMLButtonElement, IconInputProps>(
       [filteredSetIcons, setVisibleCount]
     );
 
+    const hydratedVisibleSetIcons = useMemo(
+      () => visibleSetIcons.filter((icon) => hydratedSetIcons.has(icon)),
+      [visibleSetIcons, hydratedSetIcons]
+    );
+
     const hasMoreSetIcons = filteredSetIcons.length > visibleSetIcons.length;
 
     useEffect(() => {
-      const root = scrollAreaRef.current;
-      const target = sentinelRef.current;
-      if (!root || !target) return;
+      setHydratedSetIcons(new Set());
+    }, [currentCollectionPrefix]);
 
-      const observer = new IntersectionObserver(
-        (entries) => {
-          if (!entries[0]?.isIntersecting) return;
+    useEffect(() => {
+      if (view !== 'set-browser' || !currentCollectionPrefix || visibleSetIcons.length === 0) {
+        setIsSetPageHydrating(false);
+        return;
+      }
 
-          if (view === 'set-browser' && hasMoreSetIcons) {
-            setSetVisibleCount((current) => current + ICON_PAGE_SIZE);
-            return;
+      const missingIcons = visibleSetIcons.filter((icon) => !hydratedSetIcons.has(icon));
+      if (missingIcons.length === 0) {
+        setIsSetPageHydrating(false);
+        return;
+      }
+
+      let cancelled = false;
+      setIsSetPageHydrating(true);
+
+      preloadCollectionIcons(
+        currentCollectionPrefix,
+        missingIcons.map((icon) => icon.replace(`${currentCollectionPrefix}:`, ''))
+      )
+        .then(() => {
+          if (cancelled) return;
+          setHydratedSetIcons((current) => {
+            const next = new Set(current);
+            missingIcons.forEach((icon) => next.add(icon));
+            return next;
+          });
+        })
+        .finally(() => {
+          if (!cancelled) {
+            setIsSetPageHydrating(false);
           }
-
-          if (view === 'global-search' && globalSearchHasMore && !isGlobalSearchLoading && !globalSearchLoadLockRef.current) {
-            globalSearchLoadLockRef.current = true;
-            runGlobalSearch(globalSearchQuery, globalSearchStartIndex, true);
-          }
-        },
-        {
-          root,
-          rootMargin: '240px 0px',
-        }
-      );
-
-      observer.observe(target);
+        });
 
       return () => {
-        observer.disconnect();
+        cancelled = true;
       };
-    }, [
-      view,
-      hasMoreSetIcons,
-      globalSearchHasMore,
-      isGlobalSearchLoading,
-      globalSearchQuery,
-      globalSearchStartIndex,
-      visibleSetIcons.length,
-      globalSearchResults.length,
-      runGlobalSearch,
-    ]);
+    }, [view, currentCollectionPrefix, visibleSetIcons, hydratedSetIcons]);
 
     useEffect(() => {
       if (value && !value.color) {
@@ -605,6 +627,17 @@ const IconInput = forwardRef<HTMLButtonElement, IconInputProps>(
       setSetCategoryFilter('all');
       setView('set-browser');
       setOpenFilterPanel(null);
+    };
+
+    const handleLoadMoreGlobalSearch = () => {
+      if (!globalSearchHasMore || isGlobalSearchLoading) return;
+      globalSearchLoadLockRef.current = true;
+      runGlobalSearch(globalSearchQuery, globalSearchStartIndex, true);
+    };
+
+    const handleLoadMoreSetIcons = () => {
+      if (!hasMoreSetIcons || isSetPageHydrating) return;
+      setSetVisibleCount((current) => current + ICON_PAGE_SIZE);
     };
 
     const handleIconChange = (icon?: string) => {
@@ -1042,15 +1075,29 @@ const IconInput = forwardRef<HTMLButtonElement, IconInputProps>(
         </Box>
 
         {globalSearchResults.length > 0 ? (
-          <IconGrid
-            icons={globalSearchResults}
-            onClick={handleIconChange}
-            defaultSelectdIcon={iconData?.iconName ?? undefined}
-            minColumnWidth={isMobileLayout ? 92 : 120}
-            iconSize={24}
-            tileHeight={isMobileLayout ? 78 : 86}
-            contentPadding={isMobileLayout ? '6px 0' : '12px'}
-          />
+          <>
+            <IconGrid
+              icons={globalSearchResults}
+              onClick={handleIconChange}
+              defaultSelectdIcon={iconData?.iconName ?? undefined}
+              minColumnWidth={isMobileLayout ? 92 : 120}
+              iconSize={24}
+              tileHeight={isMobileLayout ? 78 : 86}
+              contentPadding={isMobileLayout ? '6px 0' : '12px'}
+            />
+            {globalSearchHasMore ? (
+              <Box style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
+                <Button
+                  variant="secondary"
+                  loading={isGlobalSearchLoading}
+                  disabled={isGlobalSearchLoading}
+                  onClick={handleLoadMoreGlobalSearch}
+                >
+                  Load more icons
+                </Button>
+              </Box>
+            ) : null}
+          </>
         ) : !isGlobalSearchLoading ? (
           <Box
             style={{
@@ -1119,16 +1166,16 @@ const IconInput = forwardRef<HTMLButtonElement, IconInputProps>(
               {currentCollectionInfo?.author?.name ? `By ${currentCollectionInfo.author.name}` : currentCollectionPrefix}
             </Typography>
             <Box style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '12px' }}>
-              <Box style={getChipStyle(theme, false)}>
+              <Box as="span" style={getInfoPillStyle(theme)}>
                 {currentCollectionInfo ? getLicenseTitle(currentCollectionInfo) : 'Unknown license'}
               </Box>
               {currentCollectionInfo?.total ? (
-                <Box style={getChipStyle(theme, false)}>
+                <Box as="span" style={getInfoPillStyle(theme)}>
                   {currentCollectionInfo.total.toLocaleString()} icons
                 </Box>
               ) : null}
-              {currentCollectionInfo?.palette === false ? <Box style={getChipStyle(theme, false)}>Monotone</Box> : null}
-              {currentCollectionInfo?.palette === true ? <Box style={getChipStyle(theme, false)}>Multicolor</Box> : null}
+              {currentCollectionInfo?.palette === false ? <Box as="span" style={getInfoPillStyle(theme)}>Monotone</Box> : null}
+              {currentCollectionInfo?.palette === true ? <Box as="span" style={getInfoPillStyle(theme)}>Multicolor</Box> : null}
             </Box>
           </Box>
           <Box style={{ width: '100%' }}>
@@ -1174,18 +1221,58 @@ const IconInput = forwardRef<HTMLButtonElement, IconInputProps>(
           </Box>
         )}
 
-        {visibleSetIcons.length > 0 ? (
-          <IconGrid
-            icons={visibleSetIcons}
-            onClick={handleIconChange}
-            defaultSelectdIcon={iconData?.iconName ?? undefined}
-            showLabel={false}
-            minColumnWidth={isMobileLayout ? 64 : 78}
-            iconSize={isMobileLayout ? 24 : 28}
-            tileHeight={isMobileLayout ? 64 : 72}
-            contentPadding={isMobileLayout ? '4px 0' : '0'}
-          />
-        ) : !isSetLoading ? (
+        {hydratedVisibleSetIcons.length > 0 ? (
+          <>
+            <IconGrid
+              icons={hydratedVisibleSetIcons}
+              onClick={handleIconChange}
+              defaultSelectdIcon={iconData?.iconName ?? undefined}
+              showLabel={false}
+              minColumnWidth={isMobileLayout ? 64 : 78}
+              iconSize={isMobileLayout ? 24 : 28}
+              tileHeight={isMobileLayout ? 64 : 72}
+              contentPadding={isMobileLayout ? '4px 0' : '0'}
+            />
+            {hasMoreSetIcons ? (
+              <Box style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
+                <Button
+                  variant="secondary"
+                  loading={isSetPageHydrating}
+                  disabled={isSetPageHydrating}
+                  onClick={handleLoadMoreSetIcons}
+                >
+                  Load more icons
+                </Button>
+              </Box>
+            ) : null}
+          </>
+        ) : isSetPageHydrating || isSetLoading ? (
+          <Box
+            style={{
+              ...softPanelStyle,
+              display: 'grid',
+              placeItems: 'center',
+              minHeight: isMobileLayout ? '180px' : '220px',
+              textAlign: 'center',
+              padding: isMobileLayout ? '20px' : '28px',
+            }}
+          >
+            <Box style={{ maxWidth: '420px', textAlign: 'center' }}>
+              <Typography
+                variant="alpha"
+                style={{ display: 'block', lineHeight: 1.2, marginBottom: '10px' }}
+              >
+                Loading icons
+              </Typography>
+              <Typography
+                variant="pi"
+                style={{ ...toolbarMetaStyle, display: 'block', lineHeight: 1.6 }}
+              >
+                Preparing the current page before rendering it.
+              </Typography>
+            </Box>
+          </Box>
+        ) : (
           <Box
             style={{
               ...softPanelStyle,
@@ -1211,7 +1298,7 @@ const IconInput = forwardRef<HTMLButtonElement, IconInputProps>(
               </Typography>
             </Box>
           </Box>
-        ) : null}
+        )}
       </>
     );
 
@@ -1312,17 +1399,17 @@ const IconInput = forwardRef<HTMLButtonElement, IconInputProps>(
                 >
                   <div style={{ display: 'flex', height: '100%' }}>
                     <div style={{ flex: 1, padding: isMobileLayout ? '12px' : '20px 24px', display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-                      <Box style={{ ...panelStyle, marginBottom: '18px', padding: '16px 18px' }}>
-                        <Box style={{ display: 'flex', justifyContent: 'space-between', gap: '18px', alignItems: 'center', flexWrap: 'wrap' }}>
-                        <Box style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap', minWidth: isMobileLayout ? '100%' : '220px' }}>
-                          <Box>
-                            <Typography variant="omega" style={{ ...blockTitleStyle, marginBottom: '2px' }}>Icon discovery</Typography>
-                            <Typography variant="pi" style={{ ...toolbarMetaStyle, ...blockMetaStyle }}>
-                              {activePrefixes.length} icon sets available in this field
-                            </Typography>
+                      {view !== 'set-browser' && (
+                        <Box style={{ ...panelStyle, marginBottom: '18px', padding: '16px 18px' }}>
+                          <Box style={{ display: 'flex', justifyContent: 'space-between', gap: '18px', alignItems: 'center', flexWrap: 'wrap' }}>
+                          <Box style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap', minWidth: isMobileLayout ? '100%' : '220px' }}>
+                            <Box>
+                              <Typography variant="omega" style={{ ...blockTitleStyle, marginBottom: '2px' }}>Icon discovery</Typography>
+                              <Typography variant="pi" style={{ ...toolbarMetaStyle, ...blockMetaStyle }}>
+                                {activePrefixes.length} icon sets available in this field
+                              </Typography>
+                            </Box>
                           </Box>
-                        </Box>
-                        {view !== 'set-browser' && (
                           <Box style={{ position: 'relative', width: isMobileLayout ? '100%' : 'min(360px, 100%)' }}>
                             <Search width={14} height={14} style={{ position: 'absolute', left: '12px', top: '13px', opacity: 0.6 }} />
                             <input
@@ -1332,12 +1419,11 @@ const IconInput = forwardRef<HTMLButtonElement, IconInputProps>(
                               style={{ ...inputSurfaceStyle, paddingLeft: '34px' }}
                             />
                           </Box>
-                        )}
+                          </Box>
                         </Box>
-                      </Box>
+                      )}
 
                       <div
-                        ref={scrollAreaRef}
                         style={{
                           flex: 1,
                           overflowY: 'auto',
@@ -1346,7 +1432,6 @@ const IconInput = forwardRef<HTMLButtonElement, IconInputProps>(
                         }}
                       >
                         {renderModalBody()}
-                        <div ref={sentinelRef} style={{ height: '1px' }} />
                       </div>
                     </div>
                   </div>
