@@ -10,11 +10,26 @@ IconHub is a custom field for Strapi that brings the Iconify catalog into the ad
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-3178C6?style=flat&logo=typescript)](https://www.typescriptlang.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
+## Table of contents
+
+- [Demo](#demo)
+- [Why IconHub](#why-iconhub)
+- [Compatibility](#compatibility)
+- [Installation](#installation)
+- [Add the field to a content type](#add-the-field-to-a-content-type)
+- [Field configuration](#field-configuration)
+- [Editor workflow](#editor-workflow)
+- [Stored value shape](#stored-value-shape)
+- [Frontend rendering](#frontend-rendering)
+- [Development](#development)
+- [Documentation assets](#documentation-assets)
+- [License](#license)
+
 ## Demo
 
-<video controls muted playsinline preload="metadata" src="assets/docs/IconHubPluginDemo.mp4" poster="assets/docs/og-image.jpg"></video>
+[![Watch the IconHub demo](assets/docs/og-image.jpg)](assets/docs/IconHubPluginDemo.mp4)
 
-[Open the demo video directly](assets/docs/IconHubPluginDemo.mp4)
+Open the video to preview the picker flow, icon set browsing, icon editing, and color customization.
 
 ## Why IconHub
 

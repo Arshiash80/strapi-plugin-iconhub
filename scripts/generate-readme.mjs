@@ -34,6 +34,16 @@ const rewriteMarkdownAssetLink = (_, linkText, assetPath) => {
   return `[${linkText}](${absoluteUrl})`;
 };
 
+const rewriteMarkdownLinkedImage = (_, imageMarkdown, assetPath) => {
+  const absoluteUrl = `${cdnBaseUrl}${encodeRepoPath(assetPath)}`;
+  return `[${imageMarkdown}](${absoluteUrl})`;
+};
+
+const rewriteMarkdownMediaLink = (_, assetPath) => {
+  const absoluteUrl = `${cdnBaseUrl}${encodeRepoPath(assetPath)}`;
+  return `](${absoluteUrl})`;
+};
+
 const rewriteHtmlAssetSrc = (_, prefix, assetPath, suffix) => {
   const absoluteUrl = `${cdnBaseUrl}${encodeRepoPath(assetPath)}`;
   return `${prefix}${absoluteUrl}${suffix}`;
@@ -41,6 +51,10 @@ const rewriteHtmlAssetSrc = (_, prefix, assetPath, suffix) => {
 
 const source = fs.readFileSync(sourcePath, 'utf8');
 const rewritten = source
+  .replace(
+    /\[(!\[[^\]]*\]\([^)]+\))\]\(((?:assets\/docs|docs\/screenshots)\/[^)]+)\)/g,
+    rewriteMarkdownLinkedImage
+  )
   .replace(
     /!\[([^\]]*)\]\(((?:assets\/docs|docs\/screenshots)\/[^)]+)\)/g,
     rewriteMarkdownImage
@@ -52,6 +66,10 @@ const rewritten = source
   .replace(
     /\[([^\]]+)\]\(((?:assets\/docs|docs\/screenshots)\/[^)]+)\)/g,
     rewriteMarkdownAssetLink
+  )
+  .replace(
+    /\]\(((?:assets\/docs|docs\/screenshots)\/[^)]+\.(?:mp4|webm|mov))\)/g,
+    rewriteMarkdownMediaLink
   )
   .replace(
     /(src=")((?:assets\/docs|docs\/screenshots)\/[^"]+)(")/g,
