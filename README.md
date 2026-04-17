@@ -1,244 +1,265 @@
+<!-- This file is generated from README.source.md. -->
+<!-- Run `npm run docs:readme` after updating docs or screenshots. -->
+<!-- Edit this file, then run `npm run docs:readme` to regenerate README.md. -->
+
 # Strapi IconHub
 
-![Strapi IconHub - Icon Picker for Strapi CMS](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/OG%20Image%20Template%208b.jpg)
+![Strapi IconHub](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/og-image.jpg)
 
-**The most lightweight and customizable icon picker for Strapi CMS** 🚀
-
-Access **200,000+ professional icons** instantly through Iconify's massive library, with zero bloat. Features a **built-in color picker** and advanced editing tools.
+IconHub is a custom field for Strapi that brings the Iconify catalog into the admin panel. Editors can browse icon sets, search globally, inspect a single set in detail, apply colors, and store either the Iconify name, raw SVG, or both.
 
 [![Strapi](https://img.shields.io/badge/Strapi-v4%20%7C%20v5-2F2E8B?style=flat&logo=strapi)](https://strapi.io)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-3178C6?style=flat&logo=typescript)](https://www.typescriptlang.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-## Table of Contents
+## Table of contents
 
-- [Features](#features)
-- [Quick Start](#quick-start)
-- [Configuration](#configuration)
-  - [Icon Set Categories](#icon-set-categories)
-  - [Icon Set Filter Panel](#icon-set-filter-panel)
-- [Usage Examples](#usage-examples)
-- [Frontend Implementation](#frontend-implementation)
-- [API Reference](#api-reference)
+- [Demo](#demo)
+- [Why IconHub](#why-iconhub)
+- [Compatibility](#compatibility)
+- [Installation](#installation)
+- [Add the field to a content type](#add-the-field-to-a-content-type)
+- [Field configuration](#field-configuration)
+- [Editor workflow](#editor-workflow)
+- [Stored value shape](#stored-value-shape)
+- [Frontend rendering](#frontend-rendering)
+- [Development](#development)
+- [Documentation assets](#documentation-assets)
+- [License](#license)
 
-## Features
+## Demo
 
-- 🔍 **200K+ Icons**: Access via Iconify integration
-- 🎨 **Visual Picker**: Intuitive icon selection in Strapi admin
-- 🧩 **Flexible Storage**: Choose between icon name, raw SVG, or both
-- 🎨 **Color Customization**: Built-in color picker and editing tools
-- 🗂️ **Icon Set Filtering**: Restrict available icon sets by category and filter within the picker
-- 🧱 **Universal**: Works with all Strapi content types
-- ⚡ **Performance**: Lightweight and optimized
+[Open the demo video directly](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/IconHubPluginDemo.mp4)
 
-## Quick Start
+The demo covers the picker flow, icon set browsing, icon editing, and color customization.
 
-### 1. Install
+## Why IconHub
+
+- Built for Strapi editors, not just developers wiring icons in code
+- Access to 200,000+ icons through Iconify without shipping a bundled icon pack
+- Category-level restrictions in Content-Type Builder to keep fields focused
+- Collection-first browsing flow for teams that do not know the exact icon name
+- Raw SVG storage support for fast frontend rendering and external-API independence
+
+## Compatibility
+
+- Strapi v4 and v5
+- TypeScript-ready admin and server packages
+- Frontends that render Iconify names, raw SVG, or both
+
+## Installation
 
 ```bash
 npm i @arshiash80/strapi-plugin-iconhub
-# or
-yarn add @arshiash80/strapi-plugin-iconhub
 ```
 
-### 2. Rebuild Admin
+Rebuild the admin panel after installation:
 
 ```bash
-npm run build && npm run develop
-# or
-yarn build && yarn develop
+npm run build
+npm run develop
 ```
 
-### 3. Verify Installation
+Verify the plugin in **Settings > Plugins**.
 
-Navigate to **Settings > Plugins** to confirm IconHub is installed.
-![Plugin Verification](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/plugin-verification.png)
+![Plugin verification](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/plugin-verification.png)
 
-### 4. Add to Content Type
+## Add the field to a content type
 
-1. Open **Content-Type Builder** and navigate to or create a new collection.
+Open **Content-Type Builder**, add a new custom field, and select **IconHub**.
 
-2. Add custom field → Select **IconHub**
-   ![Custom Field Tab](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/custom-field-tab.png)
+![Custom field tab](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/custom-field-tab.png)
+![IconHub custom field selection](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/iconhub-custom-field-selection.png)
 
-  ![Custom Field Selection](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/iconhub-custom-field-selection.png)
+The field then appears in the content entry UI like any other Strapi input.
 
-3. Configure storage preferences
+![Empty IconHub field input](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-custom-field-input.png)
 
-## ⚙️ Configuration
+## Field configuration
 
-![Configure Storage Preferences](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/configure-storage-preferences.png)
+### Storage strategy
 
-IconHub offers flexible storage options to optimize for your use case:
+IconHub supports three storage modes:
 
-| Option              | Description                              | Use Case                                    |
-| ------------------- | ---------------------------------------- | ------------------------------------------- |
-| **Store Icon Name** | Saves icon identifier (e.g., "mdi:home") | Iconify integration, smaller database       |
-| **Store Icon Data** | Saves raw SVG code                       | Offline rendering, no external dependencies |
-| **Both** (default)  | Saves both options                       | Maximum flexibility, fallback support       |
+- `iconName`: store the Iconify identifier, such as `mdi:home`
+- `iconData`: store raw SVG markup
+- both: keep the identifier and SVG together for maximum flexibility
 
-**Note**: At least one option must be selected.
+This is configured in the field settings.
 
-### Icon Set Categories
+![Configure storage preferences](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/configure-storage-preferences.png)
 
-In the **Basic Settings** tab of the Content-Type Builder, you can control which icon set categories are available for the field. Categories are fetched automatically from the Iconify API and include groups like:
+### Restrict available icon set categories
 
-- **Material** — Material Design Icons, Material Symbols, etc.
-- **UI 24px** — Lucide, Tabler, Remix Icon, Iconoir, etc.
-- **Logos** — Simple Icons, Skill Icons, brand logos
-- **Emoji** — Noto, Twemoji, Fluent Emoji, etc.
-- And more (~12 categories covering 200K+ icons)
+In **Basic Settings**, you can decide which Iconify collection categories are available for this field. This is the main control for narrowing the picker to a design system, brand icon family, emoji-only field, and similar editorial use cases.
 
-All categories are **enabled by default**. Uncheck any category to hide those icon sets from editors using this field. This lets you, for example, restrict a field to only Material Design icons or only emoji.
+![Configure available icon set categories](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/configure-available-icon-set-categories.png)
 
-![Configure Available Icon Set Categories](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/configure-available-icon-set-categories.png)
+## Editor workflow
 
-### Icon Set Filter Panel
+### 1. Browse icon sets
 
-When selecting icons in the content editor, the icon picker modal includes a **filter panel** that lets editors narrow down which icon sets are shown:
+The default picker state is built around icon-set discovery. Editors can browse allowed categories first, then open a set when they want a tighter visual search space.
 
-- 🔍 **Search** icon sets by name
-- ☑️ **Check/uncheck** individual sets or entire categories
-- 📊 **Select All / Deselect All** buttons for quick toggling
-- The filter panel only shows icon sets from the categories the admin enabled in the Content-Type Builder
+![Picker default state example 1](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-example.png)
+![Picker default state example 2](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-example-2.png)
+![Picker default state example 3](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-example-3.png)
 
-Click the **Filter** button in the icon picker toolbar to toggle the filter panel open or closed.
+### 2. Refine the available sets
 
-![Icon Picker Filter Sidebar](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/icon-picker-search-filter-sidebar-1.png)
-![Icon Picker Filter with Search](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/icon-picker-search-filter-sidebar-2.png)
+The discovery view supports metadata-driven filtering for common browsing patterns:
 
-## Usage Examples
+- tag filtering
+- grid / icon height filtering
+- palette and license filtering
 
-### Basic Icon Selection
+![Filter icon sets by tag](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-filter-by-tag-example.png)
+![Filter icon sets by grid](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-filter-by-grid-example.png)
+![Filter icon sets by palette and license](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-filter-by-palette-and-license-example.png)
 
-The icon picker appears in your content entries with search functionality:
+### 3. Search globally or open a specific set
 
-![Icon Field Input](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/icon-custom-field-input.png)
-![Icon Picker Search](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/icon-picker-search-1.png)
-![Icon Picker Search Results](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/icon-picker-search-2.png)
-![Icon Picker Advanced Search](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/icon-picker-search-3.png)
+Editors can search across all allowed sets from the main toolbar, or open a single set for focused browsing and in-set search.
 
-### Icon Editing & Customization
+![Google Material Icons set view](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-picker-modal-google-material-icons-icon-set-example-state-for-showing-search-inside-iconset.png)
 
-- **Color Picker**: Visual color selector with hex input
-- **Live Preview**: See changes in real-time
-- **Advanced Editing**: Modify icon names and SVG data (with safety controls)
+The set browser keeps the current set context visible:
 
-![Edit Button](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/icon-custom-field-input-edit-button.png)
-![Edit Modal](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/icon-picker-edit-modal.png)
-![Color Picker](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/icon-picker-edit-modal-color-picker.png)
-![Selected Icon with Color](https://raw.githubusercontent.com/Arshiash80/strapi-plugin-iconhub/main/assets/docs/icon-custom-field-input-with-selected-icon-and-color.png)
+- set name and author
+- icon count
+- palette information
+- in-set category chips
+- set-local search input
 
-### Data Structure
+### 4. Review different icon families
 
-```typescript
-type IconField = {
-  iconName?: string; // Icon identifier (if enabled)
-  iconData?: string; // Raw SVG (if enabled)
-  width?: number; // Icon dimensions
-  height?: number;
-  color?: string; // Custom color (hex format)
+The picker works well across both monotone and multicolor sets.
+
+![Material Design icons example](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-picker-modal-icons-demo-material-design-icons-iconset-example.png)
+![Fluent UI System Color icons example](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-picker-modal-icons-demo-fluent-ui-system-color-icons-iconset-example.png)
+![Emoji One icons example](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-picker-modal-icons-demo-emoji-one-icons-iconset-example.png)
+![Stickies color icons example](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-picker-modal-icons-demo-stickies-color-icons-iconset-example.png)
+
+### 5. Edit and customize the selected icon
+
+Once an icon is selected, the field shows the chosen icon in the entry form and exposes an edit action for further adjustments.
+
+![Field input with selected icon and color](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-custom-field-input-with-selected-icon-and-color.png)
+![Edit button on field input](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-custom-field-input-edit-button.png)
+
+The edit modal includes:
+
+- live preview
+- visual color picker
+- hex input
+- icon name and raw SVG editing controls
+- download actions for exported assets
+
+![Icon edit modal](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-picker-edit-modal.png)
+![Visual color picker](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-picker-edit-modal-color-picker.png)
+
+## Stored value shape
+
+Depending on configuration, IconHub stores some or all of the following fields:
+
+```ts
+type IconFieldValue = {
+  iconName: string | null;
+  iconData: string | null;
+  width: number | null;
+  height: number | null;
+  color?: string | null;
+  isSvgEditable?: boolean;
+  isIconNameEditable?: boolean;
 };
 ```
 
-## 💻 Frontend Implementation
+## Frontend rendering
 
-### Next.js Example
+### Render from `iconName`
 
-```typescript
-import { Icon } from "@iconify/react";
+Use this when you want Iconify to resolve the icon on the frontend:
 
-type Tag = {
-  name: string;
-  icon: {
-    iconName?: string;
-    iconData?: string;
-    width?: number;
-    height?: number;
-    color?: string;
-  };
+```tsx
+import { Icon } from '@iconify/react';
+
+type IconValue = {
+  iconName: string | null;
+  width: number | null;
+  height: number | null;
+  color?: string | null;
 };
 
-export default function IconDisplay({ tags }: { tags: Tag[] }) {
+export function IconFromName({ value }: { value: IconValue }) {
+  if (!value.iconName) return null;
+
   return (
-    <div className="flex flex-wrap gap-2">
-      {tags.map((tag, i) => (
-        <div key={i} className="bg-gray-800 px-3 py-2 rounded flex items-center gap-2">
-          {/* Iconify Mode */}
-          {tag.icon.iconName && (
-            <Icon
-              icon={tag.icon.iconName}
-              width={tag.icon.width || 16}
-              height={tag.icon.height || 16}
-              color={tag.icon.color}
-            />
-          )}
-
-          {/* Raw SVG Mode */}
-          {tag.icon.iconData && (
-            <svg
-              width={tag.icon.width || 16}
-              height={tag.icon.height || 16}
-              viewBox={`0 0 ${tag.icon.width || 16} ${tag.icon.height || 16}`}
-              dangerouslySetInnerHTML={{ __html: tag.icon.iconData }}
-              style={{ color: tag.icon.color }}
-            />
-          )}
-
-          <span>{tag.name}</span>
-        </div>
-      ))}
-    </div>
+    <Icon
+      icon={value.iconName}
+      width={value.width ?? 24}
+      height={value.height ?? 24}
+      color={value.color ?? undefined}
+    />
   );
 }
 ```
 
-### Styling Options
+### Render from `iconData`
 
-```typescript
-// Custom colors
-<Icon icon="mdi:home" color="#ff0000" />
+Use this when you want full control over the SVG and do not want runtime icon lookups:
 
-// CSS classes
-<Icon icon="mdi:home" className="text-5xl text-blue-500" />
+```tsx
+type IconValue = {
+  iconData: string | null;
+  width: number | null;
+  height: number | null;
+  color?: string | null;
+};
 
-// Inline styles
-<Icon icon="mdi:home" style={{ filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))' }} />
+export function IconFromSvg({ value }: { value: IconValue }) {
+  if (!value.iconData) return null;
+
+  return (
+    <svg
+      width={value.width ?? 24}
+      height={value.height ?? 24}
+      viewBox={`0 0 ${value.width ?? 24} ${value.height ?? 24}`}
+      style={{ color: value.color ?? undefined }}
+      dangerouslySetInnerHTML={{ __html: value.iconData }}
+    />
+  );
+}
 ```
 
-## API Reference
+## Development
 
-### Configuration Options
+Useful local commands:
 
-- `storeIconName` (boolean): Enable icon name storage
-- `storeIconData` (boolean): Enable raw SVG storage
-- `required` (boolean): Make field mandatory
-- `category_*` (boolean): Enable/disable icon set categories (e.g., `category_Material`, `category_Logos`). All enabled by default.
+```bash
+npm run build
+npm run watch
+npm run watch:link
+npm run verify
+npm run docs:readme
+```
 
-### Field Properties
+Type-checking can be run directly with `tsc`:
 
-- `iconName`: Iconify identifier string
-- `iconData`: Raw SVG markup
-- `width/height`: Icon dimensions
-- `color`: Custom hex color value
+```bash
+npx tsc -p admin/tsconfig.json --noEmit
+npx tsc -p server/tsconfig.json --noEmit
+```
 
-### Validation Rules
+## Documentation assets
 
-- At least one storage option must be selected
-- Color values must be valid hex format
-- Icon dimensions are automatically detected
+Documentation images are stored in `assets/docs/`. Update `README.source.md`, then regenerate the published README:
 
-## Use Cases
+```bash
+npm run docs:readme
+```
 
-Just be creative!
-
-## Compatibility
-
-- **Strapi**: v4 & v5
-- **TypeScript**: Full support
-- **Frontend**: If you can render svg in your frontend, its compatible. (Next.js, Vue, React, and more)
-- **Icons**: 200K+ Iconify icons + custom SVGs
+The generated `README.md` rewrites local screenshot paths to jsDelivr URLs so the images render correctly on GitHub, npm, and the Strapi marketplace.
 
 ## License
 
-MIT License
+MIT
