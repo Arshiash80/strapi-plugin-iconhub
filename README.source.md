@@ -27,9 +27,9 @@ IconHub is a custom field for Strapi that brings the Iconify catalog into the ad
 
 ## Demo
 
-[![Watch the IconHub demo](assets/docs/og-image.jpg)](assets/docs/IconHubPluginDemo.mp4)
+[Open the demo video directly](assets/docs/IconHubPluginDemo.mp4)
 
-Open the video to preview the picker flow, icon set browsing, icon editing, and color customization.
+The demo covers the picker flow, icon set browsing, icon editing, and color customization.
 
 ## Why IconHub
 
