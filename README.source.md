@@ -10,6 +10,12 @@ IconHub is a custom field for Strapi that brings the Iconify catalog into the ad
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-3178C6?style=flat&logo=typescript)](https://www.typescriptlang.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
+## Demo
+
+<video controls muted playsinline preload="metadata" src="assets/docs/IconHubPluginDemo.mp4" poster="assets/docs/og-image.jpg"></video>
+
+[Open the demo video directly](assets/docs/IconHubPluginDemo.mp4)
+
 ## Why IconHub
 
 - Built for Strapi editors, not just developers wiring icons in code

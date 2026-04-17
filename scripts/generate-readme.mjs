@@ -29,11 +29,34 @@ const rewriteMarkdownImage = (_, altText, imagePath) => {
   return `![${altText}](${absoluteUrl})`;
 };
 
+const rewriteMarkdownAssetLink = (_, linkText, assetPath) => {
+  const absoluteUrl = `${cdnBaseUrl}${encodeRepoPath(assetPath)}`;
+  return `[${linkText}](${absoluteUrl})`;
+};
+
+const rewriteHtmlAssetSrc = (_, prefix, assetPath, suffix) => {
+  const absoluteUrl = `${cdnBaseUrl}${encodeRepoPath(assetPath)}`;
+  return `${prefix}${absoluteUrl}${suffix}`;
+};
+
 const source = fs.readFileSync(sourcePath, 'utf8');
-const rewritten = source.replace(
-  /!\[([^\]]*)\]\(((?:assets\/docs|docs\/screenshots)\/[^)]+)\)/g,
-  rewriteMarkdownImage
-);
+const rewritten = source
+  .replace(
+    /!\[([^\]]*)\]\(((?:assets\/docs|docs\/screenshots)\/[^)]+)\)/g,
+    rewriteMarkdownImage
+  )
+  .replace(
+    /(?<attr>src|poster)="((?:assets\/docs|docs\/screenshots)\/[^"]+)"/g,
+    (_, attr, assetPath) => `${attr}="${cdnBaseUrl}${encodeRepoPath(assetPath)}"`
+  )
+  .replace(
+    /\[([^\]]+)\]\(((?:assets\/docs|docs\/screenshots)\/[^)]+)\)/g,
+    rewriteMarkdownAssetLink
+  )
+  .replace(
+    /(src=")((?:assets\/docs|docs\/screenshots)\/[^"]+)(")/g,
+    rewriteHtmlAssetSrc
+  );
 
 const banner = [
   '<!-- This file is generated from README.source.md. -->',
