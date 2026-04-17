@@ -49,6 +49,12 @@ npm run docs:readme
 
 The generator rewrites local image paths to jsDelivr URLs so the same README renders correctly on GitHub, npm, and the Strapi marketplace.
 
+For pull request previews, generate against the current commit SHA so newly added screenshots render before merge:
+
+```bash
+README_CDN_REF=$(git rev-parse HEAD) npm run docs:readme
+```
+
 ## Optional release flow
 
 To pin image URLs to a release instead of `main`:
