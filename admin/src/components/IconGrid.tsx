@@ -3,19 +3,52 @@ import {
   type MouseEvent,
   type FocusEvent,
   type KeyboardEvent,
+  useEffect,
   useState,
 } from 'react';
 import { Icon } from '@iconify/react';
 import { Box, Typography } from '@strapi/design-system';
+import { useTheme } from 'styled-components';
 
 type IconGridProps = {
   icons: string[];
   onClick: (icon: string) => void;
   defaultSelectdIcon?: string;
+  showLabel?: boolean;
+  minColumnWidth?: number;
+  iconSize?: number;
+  tileHeight?: number;
+  contentPadding?: string;
 };
-const IconGrid = ({ icons, defaultSelectdIcon, onClick }: IconGridProps) => {
-  const [columns, setColumns] = useState(6);
+
+type ThemeShape = {
+  colors: {
+    neutral100: string;
+    neutral150: string;
+    neutral200: string;
+    neutral600: string;
+    neutral800: string;
+    primary500: string;
+    primary100: string;
+  };
+};
+
+const IconGrid = ({
+  icons,
+  defaultSelectdIcon,
+  onClick,
+  showLabel = true,
+  minColumnWidth = 120,
+  iconSize = 24,
+  tileHeight = 80,
+  contentPadding = '12px',
+}: IconGridProps) => {
+  const theme = useTheme() as ThemeShape;
   const [selectedIcon, setSelectedIcon] = useState<string | null>(defaultSelectdIcon || null);
+
+  useEffect(() => {
+    setSelectedIcon(defaultSelectdIcon || null);
+  }, [defaultSelectdIcon]);
 
   const handleIconClick = (icon: string) => {
     setSelectedIcon(icon);
@@ -32,12 +65,9 @@ const IconGrid = ({ icons, defaultSelectdIcon, onClick }: IconGridProps) => {
   // Container styles with auto-fit grid
   const containerStyle: CSSProperties = {
     display: 'grid',
-    // This will automatically create as many columns as will fit, with each column being at least 120px wide
-    gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))',
-    gap: '8px',
-    padding: '12px',
-    maxWidth: '1000px',
-    margin: '0 auto',
+    gridTemplateColumns: `repeat(auto-fill, minmax(${minColumnWidth}px, 1fr))`,
+    gap: '10px',
+    padding: contentPadding,
   };
 
   // Icon item styles
@@ -46,14 +76,14 @@ const IconGrid = ({ icons, defaultSelectdIcon, onClick }: IconGridProps) => {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '8px 4px',
-    borderRadius: '6px',
+    padding: showLabel ? '10px 8px' : '8px 4px',
+    borderRadius: '12px',
     cursor: 'pointer',
     transition: 'all 0.2s ease',
-    // ring if selected
-    boxShadow: selectedIcon === icon ? '0 0 0 2px #4f46e5' : 'none',
+    border: `1px solid ${selectedIcon === icon ? theme.colors.primary500 : theme.colors.neutral150}`,
+    background: selectedIcon === icon ? theme.colors.primary100 : theme.colors.neutral100,
     outline: 'none',
-    height: '80px',
+    height: `${tileHeight}px`,
   });
 
   // Text style with ellipsis for long names
@@ -64,54 +94,59 @@ const IconGrid = ({ icons, defaultSelectdIcon, onClick }: IconGridProps) => {
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    marginTop: '4px',
+    marginTop: '8px',
+    color: theme.colors.neutral600,
   };
 
   // Focus styles applied via inline event handlers
   const handleFocus = (e: FocusEvent<HTMLDivElement>) => {
-    e.currentTarget.style.boxShadow = '0 0 0 2px #4f46e5';
+    e.currentTarget.style.borderColor = theme.colors.primary500;
   };
 
   const handleBlur = (e: FocusEvent<HTMLDivElement>) => {
-    e.currentTarget.style.boxShadow = 'none';
+    e.currentTarget.style.borderColor = selectedIcon && e.currentTarget.getAttribute('aria-selected') === 'true'
+      ? theme.colors.primary500
+      : theme.colors.neutral150;
   };
 
   // Hover styles applied via inline event handlers
   const handleMouseEnter = (e: MouseEvent<HTMLDivElement>) => {
-    e.currentTarget.style.opacity = '0.8';
+    e.currentTarget.style.transform = 'translateY(-1px)';
+    e.currentTarget.style.borderColor = theme.colors.neutral200;
   };
 
   const handleMouseLeave = (e: MouseEvent<HTMLDivElement>, icon: string) => {
-    if (selectedIcon !== icon) {
-      e.currentTarget.style.opacity = '1';
-    }
+    e.currentTarget.style.transform = 'translateY(0)';
+    e.currentTarget.style.borderColor = selectedIcon === icon ? theme.colors.primary500 : theme.colors.neutral150;
   };
 
   return (
     <div style={containerStyle} role="grid" aria-label="Icon selection grid">
       {icons.map((icon, index) => (
-        <Box
-          key={index}
-          role="gridcell"
-          background="neutral100"
-          borderColor="neutral100"
-          tabIndex={0}
-          aria-selected={selectedIcon === icon}
-          style={iconItemStyle(icon)}
-          onClick={() => handleIconClick(icon)}
-          onKeyDown={(e: KeyboardEvent<HTMLDivElement>) => handleKeyDown(e, icon)}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={(e: MouseEvent<HTMLDivElement>) => handleMouseLeave(e, icon)}
-          aria-label={`${icon} icon`}
-          title={icon}
-        >
-          <Icon icon={icon} width={24} height={24} />
-          <Typography style={textStyle} variant="pi" textColor="neutral1000">
-            {icon}
-          </Typography>
-        </Box>
+          <Box
+            key={index}
+            role="gridcell"
+            background="neutral100"
+            borderColor="neutral100"
+            tabIndex={0}
+            aria-selected={selectedIcon === icon}
+            style={iconItemStyle(icon)}
+            onClick={() => handleIconClick(icon)}
+            onKeyDown={(e: KeyboardEvent<HTMLDivElement>) => handleKeyDown(e, icon)}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={(e: MouseEvent<HTMLDivElement>) => handleMouseLeave(e, icon)}
+            aria-label={`${icon} icon`}
+            title={icon}
+          >
+            <Icon icon={icon} width={iconSize} height={iconSize} />
+            {showLabel && (
+              <Typography style={textStyle} variant="pi" textColor="neutral1000">
+                {icon}
+              </Typography>
+            )}
+          </Box>
       ))}
     </div>
   );
