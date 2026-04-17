@@ -1,10 +1,8 @@
-<!-- This file is generated from README.source.md. -->
-<!-- Run `npm run docs:readme` after updating docs or screenshots. -->
 <!-- Edit this file, then run `npm run docs:readme` to regenerate README.md. -->
 
 # Strapi IconHub
 
-![Strapi IconHub](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/og-image.jpg)
+![Strapi IconHub](assets/docs/og-image.jpg)
 
 IconHub is a custom field for Strapi that brings the Iconify catalog into the admin panel. Editors can browse icon sets, search globally, inspect a single set in detail, apply colors, and store either the Iconify name, raw SVG, or both.
 
@@ -41,18 +39,18 @@ npm run develop
 
 Verify the plugin in **Settings > Plugins**.
 
-![Plugin verification](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/plugin-verification.png)
+![Plugin verification](assets/docs/plugin-verification.png)
 
 ## Add the field to a content type
 
 Open **Content-Type Builder**, add a new custom field, and select **IconHub**.
 
-![Custom field tab](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/custom-field-tab.png)
-![IconHub custom field selection](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/iconhub-custom-field-selection.png)
+![Custom field tab](assets/docs/custom-field-tab.png)
+![IconHub custom field selection](assets/docs/iconhub-custom-field-selection.png)
 
 The field then appears in the content entry UI like any other Strapi input.
 
-![Empty IconHub field input](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-custom-field-input.png)
+![Empty IconHub field input](assets/docs/icon-custom-field-input.png)
 
 ## Field configuration
 
@@ -66,13 +64,13 @@ IconHub supports three storage modes:
 
 This is configured in the field settings.
 
-![Configure storage preferences](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/configure-storage-preferences.png)
+![Configure storage preferences](assets/docs/configure-storage-preferences.png)
 
 ### Restrict available icon set categories
 
 In **Basic Settings**, you can decide which Iconify collection categories are available for this field. This is the main control for narrowing the picker to a design system, brand icon family, emoji-only field, and similar editorial use cases.
 
-![Configure available icon set categories](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/configure-available-icon-set-categories.png)
+![Configure available icon set categories](assets/docs/configure-available-icon-set-categories.png)
 
 ## Editor workflow
 
@@ -80,9 +78,9 @@ In **Basic Settings**, you can decide which Iconify collection categories are av
 
 The default picker state is built around icon-set discovery. Editors can browse allowed categories first, then open a set when they want a tighter visual search space.
 
-![Picker default state example 1](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-example.png)
-![Picker default state example 2](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-example-2.png)
-![Picker default state example 3](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-example-3.png)
+![Picker default state example 1](assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-example.png)
+![Picker default state example 2](assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-example-2.png)
+![Picker default state example 3](assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-example-3.png)
 
 ### 2. Refine the available sets
 
@@ -92,15 +90,15 @@ The discovery view supports metadata-driven filtering for common browsing patter
 - grid / icon height filtering
 - palette and license filtering
 
-![Filter icon sets by tag](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-filter-by-tag-example.png)
-![Filter icon sets by grid](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-filter-by-grid-example.png)
-![Filter icon sets by palette and license](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-filter-by-palette-and-license-example.png)
+![Filter icon sets by tag](assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-filter-by-tag-example.png)
+![Filter icon sets by grid](assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-filter-by-grid-example.png)
+![Filter icon sets by palette and license](assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-filter-by-palette-and-license-example.png)
 
 ### 3. Search globally or open a specific set
 
 Editors can search across all allowed sets from the main toolbar, or open a single set for focused browsing and in-set search.
 
-![Google Material Icons set view](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-picker-modal-google-material-icons-icon-set-example-state-for-showing-search-inside-iconset.png)
+![Google Material Icons set view](assets/docs/icon-picker-modal-google-material-icons-icon-set-example-state-for-showing-search-inside-iconset.png)
 
 The set browser keeps the current set context visible:
 
@@ -114,17 +112,17 @@ The set browser keeps the current set context visible:
 
 The picker works well across both monotone and multicolor sets.
 
-![Material Design icons example](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-picker-modal-icons-demo-material-design-icons-iconset-example.png)
-![Fluent UI System Color icons example](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-picker-modal-icons-demo-fluent-ui-system-color-icons-iconset-example.png)
-![Emoji One icons example](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-picker-modal-icons-demo-emoji-one-icons-iconset-example.png)
-![Stickies color icons example](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-picker-modal-icons-demo-stickies-color-icons-iconset-example.png)
+![Material Design icons example](assets/docs/icon-picker-modal-icons-demo-material-design-icons-iconset-example.png)
+![Fluent UI System Color icons example](assets/docs/icon-picker-modal-icons-demo-fluent-ui-system-color-icons-iconset-example.png)
+![Emoji One icons example](assets/docs/icon-picker-modal-icons-demo-emoji-one-icons-iconset-example.png)
+![Stickies color icons example](assets/docs/icon-picker-modal-icons-demo-stickies-color-icons-iconset-example.png)
 
 ### 5. Edit and customize the selected icon
 
 Once an icon is selected, the field shows the chosen icon in the entry form and exposes an edit action for further adjustments.
 
-![Field input with selected icon and color](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-custom-field-input-with-selected-icon-and-color.png)
-![Edit button on field input](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-custom-field-input-edit-button.png)
+![Field input with selected icon and color](assets/docs/icon-custom-field-input-with-selected-icon-and-color.png)
+![Edit button on field input](assets/docs/icon-custom-field-input-edit-button.png)
 
 The edit modal includes:
 
@@ -134,8 +132,8 @@ The edit modal includes:
 - icon name and raw SVG editing controls
 - download actions for exported assets
 
-![Icon edit modal](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-picker-edit-modal.png)
-![Visual color picker](https://cdn.jsdelivr.net/gh/Arshiash80/strapi-plugin-iconhub@main/assets/docs/icon-picker-edit-modal-color-picker.png)
+![Icon edit modal](assets/docs/icon-picker-edit-modal.png)
+![Visual color picker](assets/docs/icon-picker-edit-modal-color-picker.png)
 
 ## Stored value shape
 
