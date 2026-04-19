@@ -5,6 +5,7 @@ const repoRoot = process.cwd();
 const sourcePath = path.join(repoRoot, 'README.source.md');
 const outputPath = path.join(repoRoot, 'README.md');
 const packageJsonPath = path.join(repoRoot, 'package.json');
+const cloudinaryManifestPath = path.join(repoRoot, 'docs', 'readme-media-manifest.json');
 
 const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
 const repositoryUrl = packageJson.repository?.url ?? '';
@@ -17,6 +18,19 @@ if (!repositoryMatch) {
 const repositorySlug = repositoryMatch[1];
 const cdnRef = process.env.README_CDN_REF || 'main';
 const cdnBaseUrl = `https://cdn.jsdelivr.net/gh/${repositorySlug}@${cdnRef}/`;
+const cloudinaryManifest = fs.existsSync(cloudinaryManifestPath)
+  ? JSON.parse(fs.readFileSync(cloudinaryManifestPath, 'utf8'))
+  : { assets: {} };
+
+const resolveAssetUrl = (filePath) => {
+  const cloudinaryUrl = cloudinaryManifest.assets?.[filePath]?.secureUrl;
+
+  if (cloudinaryUrl) {
+    return cloudinaryUrl;
+  }
+
+  return `${cdnBaseUrl}${encodeRepoPath(filePath)}`;
+};
 
 const encodeRepoPath = (filePath) =>
   filePath
@@ -25,27 +39,27 @@ const encodeRepoPath = (filePath) =>
     .join('/');
 
 const rewriteMarkdownImage = (_, altText, imagePath) => {
-  const absoluteUrl = `${cdnBaseUrl}${encodeRepoPath(imagePath)}`;
+  const absoluteUrl = resolveAssetUrl(imagePath);
   return `![${altText}](${absoluteUrl})`;
 };
 
 const rewriteMarkdownAssetLink = (_, linkText, assetPath) => {
-  const absoluteUrl = `${cdnBaseUrl}${encodeRepoPath(assetPath)}`;
+  const absoluteUrl = resolveAssetUrl(assetPath);
   return `[${linkText}](${absoluteUrl})`;
 };
 
 const rewriteMarkdownLinkedImage = (_, imageMarkdown, assetPath) => {
-  const absoluteUrl = `${cdnBaseUrl}${encodeRepoPath(assetPath)}`;
+  const absoluteUrl = resolveAssetUrl(assetPath);
   return `[${imageMarkdown}](${absoluteUrl})`;
 };
 
 const rewriteMarkdownMediaLink = (_, assetPath) => {
-  const absoluteUrl = `${cdnBaseUrl}${encodeRepoPath(assetPath)}`;
+  const absoluteUrl = resolveAssetUrl(assetPath);
   return `](${absoluteUrl})`;
 };
 
 const rewriteHtmlAssetSrc = (_, prefix, assetPath, suffix) => {
-  const absoluteUrl = `${cdnBaseUrl}${encodeRepoPath(assetPath)}`;
+  const absoluteUrl = resolveAssetUrl(assetPath);
   return `${prefix}${absoluteUrl}${suffix}`;
 };
 

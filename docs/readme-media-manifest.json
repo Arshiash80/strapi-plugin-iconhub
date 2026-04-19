@@ -1,0 +1,214 @@
+{
+  "provider": "cloudinary",
+  "generatedAt": "2026-04-19T11:33:50.163Z",
+  "uploadRoot": "github/strapi-plugin-iconhub",
+  "assets": {
+    "assets/docs/IconHubPluginDemo.mp4": {
+      "bytes": 7289112,
+      "format": "mp4",
+      "publicId": "github/strapi-plugin-iconhub/assets/docs/IconHubPluginDemo",
+      "resourceType": "video",
+      "secureUrl": "https://res.cloudinary.com/dcmxgdy82/video/upload/v1776598257/github/strapi-plugin-iconhub/assets/docs/IconHubPluginDemo.mp4",
+      "version": 1776598257,
+      "sha256": "5c52781208b7048e488d92378d4851732a1b9c9e2b90b3782f28fb4489801f28"
+    },
+    "assets/docs/configure-available-icon-set-categories.png": {
+      "bytes": 243550,
+      "format": "png",
+      "publicId": "github/strapi-plugin-iconhub/assets/docs/configure-available-icon-set-categories",
+      "resourceType": "image",
+      "secureUrl": "https://res.cloudinary.com/dcmxgdy82/image/upload/v1776598259/github/strapi-plugin-iconhub/assets/docs/configure-available-icon-set-categories.png",
+      "version": 1776598259,
+      "sha256": "9f6d529194132d800ff56fe04d41931ecb275db4a7b582f664bca4241d150e18"
+    },
+    "assets/docs/configure-storage-preferences.png": {
+      "bytes": 139494,
+      "format": "png",
+      "publicId": "github/strapi-plugin-iconhub/assets/docs/configure-storage-preferences",
+      "resourceType": "image",
+      "secureUrl": "https://res.cloudinary.com/dcmxgdy82/image/upload/v1776598260/github/strapi-plugin-iconhub/assets/docs/configure-storage-preferences.png",
+      "version": 1776598260,
+      "sha256": "bee88002e3efda06425ec1dc8e50fb92e1da8c79a4fa6b8b712ac52a1620643d"
+    },
+    "assets/docs/custom-field-tab.png": {
+      "bytes": 439314,
+      "format": "png",
+      "publicId": "github/strapi-plugin-iconhub/assets/docs/custom-field-tab",
+      "resourceType": "image",
+      "secureUrl": "https://res.cloudinary.com/dcmxgdy82/image/upload/v1776598261/github/strapi-plugin-iconhub/assets/docs/custom-field-tab.png",
+      "version": 1776598261,
+      "sha256": "6bfe717aa6589ee2e3741bf223f0687306f2a40ac2cce3e3d1c424931ee3387a"
+    },
+    "assets/docs/icon-custom-field-input-edit-button.png": {
+      "bytes": 141623,
+      "format": "png",
+      "publicId": "github/strapi-plugin-iconhub/assets/docs/icon-custom-field-input-edit-button",
+      "resourceType": "image",
+      "secureUrl": "https://res.cloudinary.com/dcmxgdy82/image/upload/v1776598262/github/strapi-plugin-iconhub/assets/docs/icon-custom-field-input-edit-button.png",
+      "version": 1776598262,
+      "sha256": "a90697a3f7f6d7c67c35ba9dfe3aaa44dfda777077e19829b5de38ae16343104"
+    },
+    "assets/docs/icon-custom-field-input-with-selected-icon-and-color.png": {
+      "bytes": 87126,
+      "format": "png",
+      "publicId": "github/strapi-plugin-iconhub/assets/docs/icon-custom-field-input-with-selected-icon-and-color",
+      "resourceType": "image",
+      "secureUrl": "https://res.cloudinary.com/dcmxgdy82/image/upload/v1776598264/github/strapi-plugin-iconhub/assets/docs/icon-custom-field-input-with-selected-icon-and-color.png",
+      "version": 1776598264,
+      "sha256": "e0567c0bc43f6857b1a664271bcdd92acb16f764b7ad685e2556abcb1e92670f"
+    },
+    "assets/docs/icon-custom-field-input.png": {
+      "bytes": 135592,
+      "format": "png",
+      "publicId": "github/strapi-plugin-iconhub/assets/docs/icon-custom-field-input",
+      "resourceType": "image",
+      "secureUrl": "https://res.cloudinary.com/dcmxgdy82/image/upload/v1776598265/github/strapi-plugin-iconhub/assets/docs/icon-custom-field-input.png",
+      "version": 1776598265,
+      "sha256": "5a605c609756a11f89b9724a953d711958480c0ccb89f56c0d3ce6289c642e62"
+    },
+    "assets/docs/icon-picker-edit-modal-color-picker.png": {
+      "bytes": 317386,
+      "format": "png",
+      "publicId": "github/strapi-plugin-iconhub/assets/docs/icon-picker-edit-modal-color-picker",
+      "resourceType": "image",
+      "secureUrl": "https://res.cloudinary.com/dcmxgdy82/image/upload/v1776598266/github/strapi-plugin-iconhub/assets/docs/icon-picker-edit-modal-color-picker.png",
+      "version": 1776598266,
+      "sha256": "15e022a09dd3fd8ac19a94588ceb317d2f405320117c67b4e30c211fade42e30"
+    },
+    "assets/docs/icon-picker-edit-modal.png": {
+      "bytes": 210042,
+      "format": "png",
+      "publicId": "github/strapi-plugin-iconhub/assets/docs/icon-picker-edit-modal",
+      "resourceType": "image",
+      "secureUrl": "https://res.cloudinary.com/dcmxgdy82/image/upload/v1776598267/github/strapi-plugin-iconhub/assets/docs/icon-picker-edit-modal.png",
+      "version": 1776598267,
+      "sha256": "87c477c6313f0b1d4bc4569694c39020b702d2748dc2da836214a6dcdd767e60"
+    },
+    "assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-example-2.png": {
+      "bytes": 406321,
+      "format": "png",
+      "publicId": "github/strapi-plugin-iconhub/assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-example-2",
+      "resourceType": "image",
+      "secureUrl": "https://res.cloudinary.com/dcmxgdy82/image/upload/v1776598268/github/strapi-plugin-iconhub/assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-example-2.png",
+      "version": 1776598268,
+      "sha256": "a0d1f80b3cdd90dec54c946fa2496d92e5d0186489a4b8d8bbe1945e072fe9f6"
+    },
+    "assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-example-3.png": {
+      "bytes": 454952,
+      "format": "png",
+      "publicId": "github/strapi-plugin-iconhub/assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-example-3",
+      "resourceType": "image",
+      "secureUrl": "https://res.cloudinary.com/dcmxgdy82/image/upload/v1776598271/github/strapi-plugin-iconhub/assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-example-3.png",
+      "version": 1776598271,
+      "sha256": "d23f2be34bc8083fc88f849369a90eb59c7eee70ea021f70c2f383f3f5b84893"
+    },
+    "assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-example.png": {
+      "bytes": 426126,
+      "format": "png",
+      "publicId": "github/strapi-plugin-iconhub/assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-example",
+      "resourceType": "image",
+      "secureUrl": "https://res.cloudinary.com/dcmxgdy82/image/upload/v1776598272/github/strapi-plugin-iconhub/assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-example.png",
+      "version": 1776598272,
+      "sha256": "4d19d46e77b8edb3c7fdbee0815f4964b8a3ef9e8bfd2eb83f94b020db5c2c36"
+    },
+    "assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-filter-by-grid-example.png": {
+      "bytes": 515385,
+      "format": "png",
+      "publicId": "github/strapi-plugin-iconhub/assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-filter-by-grid-example",
+      "resourceType": "image",
+      "secureUrl": "https://res.cloudinary.com/dcmxgdy82/image/upload/v1776598274/github/strapi-plugin-iconhub/assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-filter-by-grid-example.png",
+      "version": 1776598274,
+      "sha256": "b8fc25a5189f185a8e7721d72601f4878711bae1c32f6cdf45e19470c5fdcc26"
+    },
+    "assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-filter-by-palette-and-license-example.png": {
+      "bytes": 542420,
+      "format": "png",
+      "publicId": "github/strapi-plugin-iconhub/assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-filter-by-palette-and-license-example",
+      "resourceType": "image",
+      "secureUrl": "https://res.cloudinary.com/dcmxgdy82/image/upload/v1776598275/github/strapi-plugin-iconhub/assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-filter-by-palette-and-license-example.png",
+      "version": 1776598275,
+      "sha256": "931a1d1cc516c3f78f78dd268a592ce24143c883f3cf83df1ccd13e7cd356574"
+    },
+    "assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-filter-by-tag-example.png": {
+      "bytes": 493067,
+      "format": "png",
+      "publicId": "github/strapi-plugin-iconhub/assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-filter-by-tag-example",
+      "resourceType": "image",
+      "secureUrl": "https://res.cloudinary.com/dcmxgdy82/image/upload/v1776598277/github/strapi-plugin-iconhub/assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-filter-by-tag-example.png",
+      "version": 1776598277,
+      "sha256": "91580b2a75c97d085c91e040272e9c31a9ac00eaee6d0e708f7401092bff4b43"
+    },
+    "assets/docs/icon-picker-modal-google-material-icons-icon-set-example-state-for-showing-search-inside-iconset.png": {
+      "bytes": 398271,
+      "format": "png",
+      "publicId": "github/strapi-plugin-iconhub/assets/docs/icon-picker-modal-google-material-icons-icon-set-example-state-for-showing-search-inside-iconset",
+      "resourceType": "image",
+      "secureUrl": "https://res.cloudinary.com/dcmxgdy82/image/upload/v1776598278/github/strapi-plugin-iconhub/assets/docs/icon-picker-modal-google-material-icons-icon-set-example-state-for-showing-search-inside-iconset.png",
+      "version": 1776598278,
+      "sha256": "64b148ee7515ce6d166bdcfeb650b13eb346fffa4844c7de3c0fd67a5fe6a499"
+    },
+    "assets/docs/icon-picker-modal-icons-demo-emoji-one-icons-iconset-example.png": {
+      "bytes": 508561,
+      "format": "png",
+      "publicId": "github/strapi-plugin-iconhub/assets/docs/icon-picker-modal-icons-demo-emoji-one-icons-iconset-example",
+      "resourceType": "image",
+      "secureUrl": "https://res.cloudinary.com/dcmxgdy82/image/upload/v1776598280/github/strapi-plugin-iconhub/assets/docs/icon-picker-modal-icons-demo-emoji-one-icons-iconset-example.png",
+      "version": 1776598280,
+      "sha256": "87cecc06f8a08a5f0b8d80ca3faace1de4754966843105cbc491090b543adab5"
+    },
+    "assets/docs/icon-picker-modal-icons-demo-fluent-ui-system-color-icons-iconset-example.png": {
+      "bytes": 530010,
+      "format": "png",
+      "publicId": "github/strapi-plugin-iconhub/assets/docs/icon-picker-modal-icons-demo-fluent-ui-system-color-icons-iconset-example",
+      "resourceType": "image",
+      "secureUrl": "https://res.cloudinary.com/dcmxgdy82/image/upload/v1776598282/github/strapi-plugin-iconhub/assets/docs/icon-picker-modal-icons-demo-fluent-ui-system-color-icons-iconset-example.png",
+      "version": 1776598282,
+      "sha256": "f6fb8a87341f8daca7ebfc02f97bfe09d7a100b5be694dcb598666699640c7d6"
+    },
+    "assets/docs/icon-picker-modal-icons-demo-material-design-icons-iconset-example.png": {
+      "bytes": 631655,
+      "format": "png",
+      "publicId": "github/strapi-plugin-iconhub/assets/docs/icon-picker-modal-icons-demo-material-design-icons-iconset-example",
+      "resourceType": "image",
+      "secureUrl": "https://res.cloudinary.com/dcmxgdy82/image/upload/v1776598284/github/strapi-plugin-iconhub/assets/docs/icon-picker-modal-icons-demo-material-design-icons-iconset-example.png",
+      "version": 1776598284,
+      "sha256": "b8baf3d861b791ed7b2a36b07d5a48225f896c846c76f6c255a65168680d5418"
+    },
+    "assets/docs/icon-picker-modal-icons-demo-stickies-color-icons-iconset-example.png": {
+      "bytes": 631655,
+      "format": "png",
+      "publicId": "github/strapi-plugin-iconhub/assets/docs/icon-picker-modal-icons-demo-stickies-color-icons-iconset-example",
+      "resourceType": "image",
+      "secureUrl": "https://res.cloudinary.com/dcmxgdy82/image/upload/v1776598286/github/strapi-plugin-iconhub/assets/docs/icon-picker-modal-icons-demo-stickies-color-icons-iconset-example.png",
+      "version": 1776598286,
+      "sha256": "b8baf3d861b791ed7b2a36b07d5a48225f896c846c76f6c255a65168680d5418"
+    },
+    "assets/docs/iconhub-custom-field-selection.png": {
+      "bytes": 295386,
+      "format": "png",
+      "publicId": "github/strapi-plugin-iconhub/assets/docs/iconhub-custom-field-selection",
+      "resourceType": "image",
+      "secureUrl": "https://res.cloudinary.com/dcmxgdy82/image/upload/v1776598287/github/strapi-plugin-iconhub/assets/docs/iconhub-custom-field-selection.png",
+      "version": 1776598287,
+      "sha256": "be184410b5a68be96346e6995807eca33a0ca43b7f0952ab4ee1fb96c30dfc26"
+    },
+    "assets/docs/og-image.jpg": {
+      "bytes": 68030,
+      "format": "jpg",
+      "publicId": "github/strapi-plugin-iconhub/assets/docs/og-image",
+      "resourceType": "image",
+      "secureUrl": "https://res.cloudinary.com/dcmxgdy82/image/upload/v1776598287/github/strapi-plugin-iconhub/assets/docs/og-image.jpg",
+      "version": 1776598287,
+      "sha256": "f8a143b929163d66833df4ebbfc9f1f47e4983c698604eb8e35026a98fce563a"
+    },
+    "assets/docs/plugin-verification.png": {
+      "bytes": 289813,
+      "format": "png",
+      "publicId": "github/strapi-plugin-iconhub/assets/docs/plugin-verification",
+      "resourceType": "image",
+      "secureUrl": "https://res.cloudinary.com/dcmxgdy82/image/upload/v1776598288/github/strapi-plugin-iconhub/assets/docs/plugin-verification.png",
+      "version": 1776598288,
+      "sha256": "6beb3b3ea7ed48ba8055c219f93027f8fadfa243ac0213718c5be2938d3b058d"
+    }
+  }
+}

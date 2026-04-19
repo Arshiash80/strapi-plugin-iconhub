@@ -1,6 +1,6 @@
-# Documentation Screenshot Workflow
+# Documentation Media Workflow
 
-The published README uses images stored in `assets/docs/`. Keep those files stable and overwrite existing assets when the UI changes, instead of creating dated one-off screenshots.
+The published README uses media stored in `assets/docs/`. Keep those files stable and overwrite existing assets when the UI changes, instead of creating dated one-off screenshots. The README generator prefers Cloudinary URLs from `docs/readme-media-manifest.json` and falls back to jsDelivr only when an asset has not been synced yet.
 
 ## Current asset groups
 
@@ -23,6 +23,8 @@ The published README uses images stored in `assets/docs/`. Keep those files stab
   - `icon-picker-modal-icons-demo-*.png`
 - marketing / cover image
   - `og-image.jpg`
+- demo media
+  - `IconHubPluginDemo.mp4`
 
 ## Capture rules
 
@@ -41,15 +43,26 @@ The published README uses images stored in `assets/docs/`. Keep those files stab
 ![Picker default state](assets/docs/icon-picker-modal-default-state-with-icons-sets-and-no-search-example.png)
 ```
 
-3. Regenerate the published README
+3. Sync changed README assets to Cloudinary
+
+```bash
+export CLOUDINARY_CLOUD_NAME=your-cloud-name
+export CLOUDINARY_API_KEY=your-api-key
+export CLOUDINARY_API_SECRET=your-api-secret
+npm run docs:sync-media
+```
+
+Only changed assets are uploaded. The script computes a SHA-256 hash for each README asset, stores the result in `docs/readme-media-manifest.json`, and skips assets whose content hash is unchanged.
+
+4. Regenerate the published README
 
 ```bash
 npm run docs:readme
 ```
 
-The generator rewrites local image paths to jsDelivr URLs so the same README renders correctly on GitHub, npm, and the Strapi marketplace.
+The generator rewrites local media paths to Cloudinary URLs when they exist in the manifest. If an asset has not been synced yet, it falls back to jsDelivr so GitHub previews still work.
 
-For pull request previews, generate against the current commit SHA so newly added screenshots render before merge:
+For pull request previews, generate against the current commit SHA so newly added fallback assets render before merge:
 
 ```bash
 README_CDN_REF=$(git rev-parse HEAD) npm run docs:readme
@@ -57,7 +70,7 @@ README_CDN_REF=$(git rev-parse HEAD) npm run docs:readme
 
 ## Optional release flow
 
-To pin image URLs to a release instead of `main`:
+If you intentionally want fallback jsDelivr URLs pinned to a release instead of `main`:
 
 ```bash
 README_CDN_REF=v1.2.0 npm run docs:readme
