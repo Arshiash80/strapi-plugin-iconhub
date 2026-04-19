@@ -26,3 +26,29 @@ Recent history follows short Conventional Commit prefixes such as `feat:`, `fix:
 
 ## Security & Configuration Tips
 Do not hardcode environment-specific URLs or Strapi app paths. Keep external Iconify access isolated to `admin/src/libs/`, and prefer configuration-driven behavior over inline constants when adding plugin options.
+
+## Open-Source Guardrails
+This repo is public (MIT). Every commit, PR body, issue comment, and doc is world-readable and permanent in git history. Review diffs before committing.
+
+**Never commit:**
+- Secrets: API keys, tokens, passwords, OAuth secrets, private keys, `.env*` files. `.env` is gitignored — keep it so.
+- Personal data beyond the maintainer info already in `package.json`/`LICENSE`: no third-party emails, absolute local paths (`/Users/<name>/...`), internal hostnames, or machine identifiers.
+- Real customer data, DB dumps, production logs, or Strapi admin exports.
+- Local agent/editor artifacts (e.g. `.claude/settings.local.json`, transcripts).
+
+**Handling config:**
+- Read runtime config from `process.env`; document required variable names in the README without realistic example values.
+- The Cloudinary `cloud_name` in `docs/readme-media-manifest.json` is a public asset URL identifier, not a secret. `CLOUDINARY_API_KEY`/`CLOUDINARY_API_SECRET` are secrets — never log, print, or commit them.
+- Don't paste `.env` contents, tokens, or outputs containing them into commit messages, PR text, code comments, or error messages.
+
+**Code & dependencies:**
+- No telemetry, analytics, or outbound calls beyond the documented Iconify API. New endpoints require maintainer approval and a README update.
+- Prefer permissively-licensed dependencies (MIT/Apache-2.0/ISC/BSD). Flag GPL/AGPL/CC-NC additions — incompatible with MIT.
+- Avoid postinstall scripts, binary blobs, and unexplained lockfile changes.
+
+**Contributor etiquette:**
+- Write commit messages and PR bodies for an external audience: describe the change and motivation, skip internal context.
+- Assume PRs come from strangers; keep error messages, setup docs, and code comments explicit — no insider shorthand.
+- Don't rewrite or squash others' commits without reason.
+
+**If a secret leaks:** stop, notify the maintainer, rotate the credential first, then rewrite history.

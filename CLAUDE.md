@@ -2,6 +2,34 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Public open-source repo — guardrails
+
+This repo is public (MIT, published as `@arshiash80/strapi-plugin-iconhub`). Treat every change — code, commits, PR text, issue comments, docs — as world-readable and permanent in git history. Before any commit, review the diff for leaks.
+
+### Never commit
+- Secrets of any kind: API keys, tokens, passwords, signed URLs, session cookies, OAuth client secrets, private keys, `.env*` files.
+- Personal data beyond what's already public in `package.json` / `LICENSE` (maintainer name + email). No other people's emails, usernames, IPs, machine names, or absolute local paths (e.g. `/Users/<name>/...`).
+- Internal URLs, private repo links, staging hosts, or anything that identifies non-public infra.
+- Real customer data, Strapi admin dumps, database snapshots, or copy-pasted production logs.
+- AI-tool artifacts that aren't intentional contributions: local agent caches, `.claude/settings.local.json` (already gitignored globally), transcripts.
+
+### Handling secrets safely
+- `.env` is gitignored — keep it that way. If a new script needs config, read from `process.env` and document the required var names in README/AGENTS.md without example values that look real.
+- Cloudinary `cloud_name` in `docs/readme-media-manifest.json` is a public identifier, not a secret. `CLOUDINARY_API_KEY` and `CLOUDINARY_API_SECRET` are secrets and must never appear in tracked files, logs, or error messages.
+- If you ever see a secret in a diff, staged file, or committed file: stop, tell the maintainer, and do not push. Rotation first, history rewrite second.
+- Don't paste `.env` contents, tokens, or tool outputs containing them into commit messages, PR descriptions, issue comments, or code comments.
+
+### Code & dependencies
+- No telemetry, analytics, or outbound network calls beyond the already-documented Iconify API (`https://api.iconify.design`). New endpoints need an explicit maintainer decision and doc update.
+- Don't hardcode environment-specific URLs or absolute paths. Use config-driven behavior; isolate external HTTP calls in `admin/src/libs/`.
+- Dependency changes: prefer well-maintained, permissively-licensed (MIT/Apache-2.0/ISC/BSD) packages. Flag GPL/AGPL/CC-NC pulls to the maintainer — they're incompatible with this plugin's MIT license.
+- Don't add lockfile-only tweaks, postinstall scripts, or binary blobs without explanation.
+
+### Contributor etiquette
+- Assume PRs may come from strangers. Be explicit in error messages and README steps; avoid insider shorthand.
+- Commit messages and PR bodies are public — focus on the change and its motivation, not internal context or speculation about unrelated users.
+- Respect contributor attribution: don't rewrite or squash other people's commits without reason.
+
 ## Commands
 
 ```bash
