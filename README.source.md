@@ -238,6 +238,7 @@ npm run build
 npm run watch
 npm run watch:link
 npm run verify
+npm run docs:sync-media
 npm run docs:readme
 ```
 
@@ -250,13 +251,14 @@ npx tsc -p server/tsconfig.json --noEmit
 
 ## Documentation assets
 
-Documentation images are stored in `assets/docs/`. Update `README.source.md`, then regenerate the published README:
+Documentation images and videos are stored in `assets/docs/`. Update `README.source.md`, sync changed assets to Cloudinary, then regenerate the published README:
 
 ```bash
+npm run docs:sync-media
 npm run docs:readme
 ```
 
-The generated `README.md` rewrites local screenshot paths to jsDelivr URLs so the images render correctly on GitHub, npm, and the Strapi marketplace.
+The Cloudinary sync script uploads only changed README assets, stores their content hashes in `docs/readme-media-manifest.json`, and lets `README.md` use Cloudinary delivery URLs for marketplace-safe media rendering. Unsynced assets fall back to jsDelivr URLs.
 
 ## License
 
